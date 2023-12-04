@@ -1,0 +1,6 @@
+
+"CFBundleDisplayName" = "VeLiveQuickStartDemo";
+
+"NSCameraUsageDescription" = "VeLiveQuickStartDemo needs access to your camera permission, and there will be pictures in the live stream after opening it.";
+
+"NSMicrophoneUsageDescription" = "VeLiveQuickStartDemo needs access to your microphone permission, and there will be sound in the live stream after it is turned on.";

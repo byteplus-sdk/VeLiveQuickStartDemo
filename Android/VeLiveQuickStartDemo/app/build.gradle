@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
+    defaultConfig {
+        configurations.all {
+            resolutionStrategy { force 'androidx.core:core:1.6.0' }
+        }
+        manifestPlaceholders
+        ndk {
+            // Set SO library architecture, support armv7a and arm64 architecture.
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+
+        packagingOptions {
+            pickFirst '**/libc++_shared.so'
+        }
+        // APPLOG_SCHEME is a required parameter, and if it is missing, the compilation will fail.
+        // online indicates the live broadcast scene.
+
+        manifestPlaceholders.put("APPLOG_SCHEME", "online")
+        applicationId "com.byteplus.ttsdk.quickstart.demo"
+        minSdkVersion 21
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
+
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+    }
+//    ndkVersion '16.1.4479499'
+}
+
+
+dependencies {
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Add TTSDK online integration address, it is recommended to use the latest stable version, please refer to the [SDK Download] chapter for how to obtain it
+     implementation 'com.bytedanceapi:ttsdk-ttlivepush_rtc:1.39.300.2'
+     implementation 'com.bytedanceapi:ttsdk-ttlivepull_rtc:1.39.300.2'
+
+
+    implementation 'commons-net:commons-net:3.6'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+}

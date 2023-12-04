@@ -1,0 +1,194 @@
+
+"Camera_Push" = "Camera Push";
+
+"Camera_Push_Info_Real_Time_Encode_Bitrate" = "Real-time encoding bitrate";
+
+"Camera_Push_Info_Real_Time_Trans_Bitrate" = "Real-time transmission bitrate";
+
+"Camera_Push_Info_Real_Time_Trans_FPS" = "Real-time transmission FPS";
+
+"Camera_Push_Info_Url" = "Push Url";
+
+"Camera_Push_Info_Video_Capture_FPS" = "Video Capture FPS";
+
+"Camera_Push_Info_Video_Capture_IO_FPS" = "Video Capture I/O FPS";
+
+"Camera_Push_Info_Video_Capture_Resolution" = "Video Capture Resolution";
+
+"Camera_Push_Info_Video_Encode_Codec" = "Video Encode Codec";
+
+"Camera_Push_Info_Video_MaxBitrate" = "Video MaxBitrate";
+
+"Camera_Push_Info_Video_MinBitrate" = "Video Min Bitrate";
+
+"Camera_Push_Info_Video_Push_Resolution" = "Video Push Resolution";
+
+"Camera_Push_Info_Video_StartBitrate" = "Video Start Bitrate";
+
+"Home_Advanced_Features" = "Advanced Features";
+
+"Home_Anchor_And_Audience_Mic" = "Anchor and audience mic";
+
+"Home_Anchor_VS_Anchor_Pk" = "Anchor vs. Anchor PK";
+
+"Home_Basic_Features" = "Basic Features";
+
+"Home_Camera_Push" = "Camera Push streaming";
+
+"Home_Custom_Push_Stream" = "Custom Collection Push Stream";
+
+"Home_H265_Hardcoded" = "H.265 hardcoded";
+
+"Home_Interactive_Features" = "Interactive Features";
+
+"Home_Live_Beauty_Filter" = "Beauty Filter";
+
+"Home_Live_Pull_Streaming" = "Live Pull streaming";
+
+"Home_Picture_In_Picture" = "Picture In Picture";
+
+"Home_Pull_Feed" = "Feed Flow";
+
+"Home_Push_Streaming_Bitrate_Adaptive" = "Push streaming bitrate adaptive";
+
+"Home_RTM_Push_Streaming" = "RTM ultra-low latency push streaming";
+
+"Interact_Link" = "Audience Link";
+
+"Interact_Link_Anchor" = "I'm an anchor";
+
+"Interact_Link_Anchor_Title" = "Anchor";
+
+"Interact_Link_Audience" = "I'm an audience";
+
+"Interact_Link_Audience_Title" = "Audience";
+
+"Interact_Link_Tip" = "Please enter SDK and room information";
+
+"Interact_PK" = "Anchor and Anchor PK";
+
+"Interact_PK_Start" = "Start Live";
+
+"Interact_PK_Tip" = "Please enter SDK and room information\nOther Token Please use the current user ID and Other Room Id to generate";
+
+"Interact_Send_SEI" = "Send SEI";
+
+"Interact_Start_Link" = "Start Link";
+
+"Interact_Start_PK" = "Start cross-room PK";
+
+"Interact_Stop_Link" = "Stop Link";
+
+"Interact_Stop_PK" = "Stop cross-room PK";
+
+"Pull_Fill_Mode" = "Fill Mode";
+
+"Pull_Mute" = "Mute";
+
+"Pull_Stream" = "Live Pull";
+
+"Pull_Stream_Fill_Mode_Alert_AspectFill" = "AspectFill";
+
+"Pull_Stream_Fill_Mode_Alert_AspectFit" = "AspectFit";
+
+"Pull_Stream_Fill_Mode_Alert_FullFill" = "FullFill";
+
+"Pull_Stream_Fill_Mode_Alert_Title" = "Fill Mode";
+
+"Pull_Stream_Info_Audio_BufferTime" = "Audio Buffer Time";
+
+"Pull_Stream_Info_Delay_Time" = "Delay Time";
+
+"Pull_Stream_Info_Is_HardWareDecode" = "Hardware Decode";
+
+"Pull_Stream_Info_Is_Mute" = "Muted";
+
+"Pull_Stream_Info_Is_Playing" = "Playing";
+
+"Pull_Stream_Info_Stall_Time" = "Stall Time";
+
+"Pull_Stream_Info_Stream_Format" = "Stream Format";
+
+"Pull_Stream_Info_Stream_Protocol" = "Stream Protocol";
+
+"Pull_Stream_Info_Url" = "Playback Url";
+
+"Pull_Stream_Info_Video_Bitrate" = "Video Bitrate";
+
+"Pull_Stream_Info_Video_BufferTime" = "Video Buffer Time";
+
+"Pull_Stream_Info_Video_Codec" = "Video Codec";
+
+"Pull_Stream_Info_Video_FPS" = "Video FPS";
+
+"Pull_Stream_Info_Video_Size" = "Video Size";
+
+"Pull_Stream_Start_Play" = "Start";
+
+"Pull_Stream_Stop_Play" = "Stop";
+
+"Pull_Stream_Url_Tip" = "Pull Url";
+
+"Pull_UnMute" = "UnMute";
+
+"Push_Auto_Bitrate" = "Auto Bitrate";
+
+"Push_Beauty" = "Push Beauty";
+
+"Push_Beauty_Compose" = "Beauty";
+
+"Push_Beauty_Filter" = "Filter";
+
+"Push_Beauty_Sticker" = "Sticker";
+
+"Push_Camera_Back" = "Camera(Back)";
+
+"Push_Camera_Front" = "Camera(Front)";
+
+"Push_Capture_Mirror" = "Capture Mirror";
+
+"Push_Custom" = "Custom Push";
+
+"Push_Info" = "Info";
+
+"Push_Mute" = "Mute";
+
+"Push_Preview_Mirror" = "Preview Mirror";
+
+"Push_Push_Mirror" = "Push Mirror";
+
+"Push_RTM" = "RTM Push";
+
+"Push_Start_Push" = "Start Push";
+
+"Push_Stop_Push" = "Stop Push";
+
+"Push_UnMute" = "UnMute";
+
+"Push_Url_Tip" = "Push Url";
+
+"Start_Picture_In_Picture" = "Open picture-in-picture";
+
+"Stop_Picture_In_Picture" = "Stop picture-in-picture";
+
+"app_name" = "veLive Quick Start";
+
+"input_url_list" = "Please enter multiple URL addresses, separated by newlines";
+
+"other_room_id" = "Other Room ID";
+
+"other_token" = "Other Token";
+
+"pull_url" = "Pull Url";
+
+"push_url" = "Push Url";
+
+"room_id" = "Room ID";
+
+"rtm_url" = "RTM URL";
+
+"rtmp_url" = "RTMP URL";
+
+"token" = "Token";
+
+"user_id" = "User ID";
