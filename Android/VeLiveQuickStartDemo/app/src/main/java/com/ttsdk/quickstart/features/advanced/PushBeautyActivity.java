@@ -41,10 +41,10 @@ Camera push streaming, integrated intelligent beautification special effects
  5. Open the camera capture API: mLivePusher.startVideoCapture (VeLiveVideoCaptureFrontCamera);
  6, start streaming API: [mLivePusherstartPush: @"rtmp://push.example.com/rtmp"];
  7, initial beauty related parameters API: mLivePusher.getVideoEffectManager ().setupWithConfig (new VeLiveVideoEffectLicenseConfiguration.create ("licpath
- 8、设置模型资源包 API: mLivePusher.getVideoEffectManager().setAlgoModelPath(algoModelPath);
- 9、设置美颜美型 API: mLivePusher.getVideoEffectManager().setComposeNodes(nodes);
- 10、设置滤镜 API: mLivePusher.getVideoEffectManager().setFilter("");
- 11、设置贴纸 API:  mLivePusher.getVideoEffectManager().setSticker("");
+ 8、set the model effect API: mLivePusher.getVideoEffectManager().setAlgoModelPath(algoModelPath);
+ 9、Setup Beauty API: mLivePusher.getVideoEffectManager().setComposeNodes(nodes);
+ 10、Setup Filter API: mLivePusher.getVideoEffectManager().setFilter("");
+ 11、Setup Sticker API:  mLivePusher.getVideoEffectManager().setSticker("");
  */
 public class PushBeautyActivity extends AppCompatActivity {
     private VeLivePusher mLivePusher;
