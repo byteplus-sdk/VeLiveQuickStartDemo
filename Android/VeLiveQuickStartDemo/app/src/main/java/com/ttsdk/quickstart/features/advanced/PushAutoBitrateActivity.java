@@ -40,9 +40,9 @@ Bit rate adaptive streaming
  4, set encoding configuration API: mLivePusher.setVideoEncoderConfiguration (encoderConfiguration);
  5, set bit rate adaptive sensitivity API: mLivePusher.setProperty ("VeLiveKeySetBitrateAdaptStrategy", "NORMAL");
  6, set preview API: mLivePusher.setRenderView (findViewById (R.id. render_view));
- 7, open microphone ac
- 8、打开摄像头采集 API: mLivePusher.startVideoCapture(VeLiveVideoCaptureFrontCamera);
- 9、开始推流 API：mLivePusher.startPush("rtmp://push.example.com/rtmp");
+ 7, open the microphone capture API: mLivePusher.startAudioCapture(VeLiveAudioCaptureMicrophone);
+ 8、open the camera capture API: mLivePusher.startVideoCapture(VeLiveVideoCaptureFrontCamera);
+ 9、start push API：mLivePusher.startPush("rtmp://push.example.com/rtmp");
  */
 public class PushAutoBitrateActivity extends AppCompatActivity {
 
