@@ -284,7 +284,7 @@
         //  Set mirror
         [self.rtcVideo setLocalVideoMirrorType:(ByteRTCMirrorTypeRenderAndEncoder)];
         //  Set video direction
-        [self.rtcVideo setVideoOrientation:(ByteRTCVideoOrientationPortrait)];
+        // [self.rtcVideo setVideoOrientation:(ByteRTCVideoOrientationPortrait)];
         //  Set preview view
         [self setupLocalVideoView:_localVideoView];
     }
