@@ -9,7 +9,7 @@
 //  ViewController.m
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2022/10/18.
 //
  /*
  This file shows the SDK entry, just UI display without SDK specific functions.

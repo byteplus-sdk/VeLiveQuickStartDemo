@@ -9,7 +9,7 @@
 //  VeLiveAnchorManager.m
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/2/22.
 //
 
 #import "VeLiveAnchorManager.h"
@@ -270,7 +270,7 @@
         ByteRTCVideoCaptureConfig *captureConfig = [[ByteRTCVideoCaptureConfig alloc] init];
         captureConfig.videoSize = CGSizeMake(self.config.captureWidth, self.config.captureHeight);
         captureConfig.frameRate = self.config.captureFps;
-        captureConfig.preference = ByteRTCVideoCapturePreferenceAutoPerformance;
+        captureConfig.preference = ByteRTCVideoCapturePreferenceAuto;
         [self.rtcVideo setVideoCaptureConfig:captureConfig];
         //  Set encoding parameters
         ByteRTCVideoEncoderConfig *solution = [[ByteRTCVideoEncoderConfig alloc] init];
@@ -284,7 +284,7 @@
         //  Set mirror
         [self.rtcVideo setLocalVideoMirrorType:(ByteRTCMirrorTypeRenderAndEncoder)];
         //  Set video direction
-        // [self.rtcVideo setVideoOrientation:(ByteRTCVideoOrientationPortrait)];
+        [self.rtcVideo setVideoOrientation:(ByteRTCVideoOrientationPortrait)];
         //  Set preview view
         [self setupLocalVideoView:_localVideoView];
     }

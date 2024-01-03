@@ -8,7 +8,7 @@
 //  VeLivePictureInPictureViewController.h
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/8/8.
 //
 
 #import <UIKit/UIKit.h>

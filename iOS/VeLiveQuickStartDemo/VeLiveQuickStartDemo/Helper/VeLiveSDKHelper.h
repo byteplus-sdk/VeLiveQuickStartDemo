@@ -9,7 +9,7 @@
 //  VeLiveSDKHelper.h
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/6/28.
 //
 
 #import <UIKit/UIKit.h>
@@ -76,9 +76,7 @@
  */
 #define RTC_OTHER_ROOM_TOKEN @""
 
-#import <TTSDK/VeLivePusher.h>
-#import <TTSDK/VeLivePlayer.h>
-#import <TTSDK/TTSDKManager.h>
+#import <TTSDKFramework/TTSDKFramework.h>
 #import <BytePlusRTC/BytePlusRTC.h>
 
 #import "VeLiveDeviceCapture.h"

@@ -148,6 +148,9 @@ public class PushBeautyActivity extends AppCompatActivity {
     public void filterControl(View view) {
         //  Filter effect package, find the correct resource path, generally to the Filter_01_xx directory
         String filterPath = VeLiveEffectHelper.getFilterPathByName("xxx");;
+        if (!VeLiveSDKHelper.isFileExists(filterPath)) {
+            return;
+        }
         //  Set the filter effect package path
         mLivePusher.getVideoEffectManager().setFilter(filterPath);
         //  Set filter effect intensity
@@ -157,6 +160,9 @@ public class PushBeautyActivity extends AppCompatActivity {
     public void stickerControl(View view) {
         //  Sticker effect package, find the correct resource path, generally to the stickers_xxx directory
         String stickerPath = VeLiveEffectHelper.getStickerPathByName("xxx");
+        if (!VeLiveSDKHelper.isFileExists(stickerPath)) {
+            return;
+        }
         //  Set the sticker effect package path
         mLivePusher.getVideoEffectManager().setSticker(stickerPath);
     }

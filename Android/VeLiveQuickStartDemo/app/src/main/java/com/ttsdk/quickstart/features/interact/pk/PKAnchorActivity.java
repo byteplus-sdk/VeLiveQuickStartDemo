@@ -17,6 +17,8 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ss.bytertc.engine.live.MixedStreamConfig;
+import com.ss.bytertc.engine.video.IVideoEffect;
+import com.ss.bytertc.engine.video.RTCVideoEffect;
 import com.ttsdk.quickstart.R;
 import com.ttsdk.quickstart.helper.VeLiveEffectHelper;
 import com.ttsdk.quickstart.helper.VeLiveSDKHelper;
@@ -170,6 +172,7 @@ public class PKAnchorActivity extends AppCompatActivity {
 
     private void setupEffectSDK() {
         RTCVideo rtcVideo = mAnchorManager.getRTCVideo();
+        IVideoEffect rtcVideoEffect = rtcVideo.getVideoEffectInterface();
         //  Effects Authentication License path, please find the correct path according to the project configuration
         String licPath = VeLiveEffectHelper.getLicensePath("xxx.licbag");
         //  Effect model effect package path
@@ -178,10 +181,9 @@ public class PKAnchorActivity extends AppCompatActivity {
             return;
         }
         //  Check the License
-        rtcVideo.checkVideoEffectLicense(Env.getApplicationContext(), licPath);
         //  Set up special effects algorithm package
-        rtcVideo.setVideoEffectAlgoModelPath(algoModePath);
-        if (rtcVideo.enableEffectBeauty(true) != 0) {
+        rtcVideoEffect.initCVResource(licPath, algoModePath);
+        if (rtcVideoEffect.enableVideoEffect() != 0) {
             Log.e("VeLiveQuickStartDemo", "enable effect error");
         }
     }
@@ -189,27 +191,38 @@ public class PKAnchorActivity extends AppCompatActivity {
     public void beautyControl(View view) {
         //  According to the effect package, find the correct resource path, generally to the reshape_lite, beauty_IOS_lite directory
         String beautyPath = VeLiveEffectHelper.getBeautyPathByName("xxx");
+        if (!VeLiveSDKHelper.isFileExists(beautyPath)) {
+            return;
+        }
+        IVideoEffect rtcVideoEffect = mAnchorManager.getRTCVideo().getVideoEffectInterface();
         //  Set up beauty effect package
-
-        mAnchorManager.getRTCVideo().setVideoEffectNodes(Collections.singletonList(beautyPath));
+        rtcVideoEffect.setEffectNodes(Collections.singletonList(beautyPath));
         //  Set the beauty effect intensity, NodeKey can be obtained in the config_file under the effect package, if there is no config_file, please contact the business consultation
-        mAnchorManager.getRTCVideo().updateVideoEffectNode(beautyPath, "whiten", 0.5F);
+        rtcVideoEffect.updateEffectNode(beautyPath, "whiten", 0.5F);
     }
 
     public void filterControl(View view) {
         //  Filter effect package, find the correct resource path, generally to the Filter_01_xx directory
         String filterPath = VeLiveEffectHelper.getFilterPathByName("xxx");;
+        if (!VeLiveSDKHelper.isFileExists(filterPath)) {
+            return;
+        }
+        IVideoEffect rtcVideoEffect = mAnchorManager.getRTCVideo().getVideoEffectInterface();
         //  Set the filter effect package path
-        mAnchorManager.getRTCVideo().setVideoEffectColorFilter(filterPath);
+        rtcVideoEffect.setColorFilter(filterPath);
         //  Set filter effect intensity
-        mAnchorManager.getRTCVideo().setVideoEffectColorFilterIntensity(0.5F);
+        rtcVideoEffect.setColorFilterIntensity(0.5F);
     }
 
     public void stickerControl(View view) {
         //  Sticker effect package, find the correct resource path, generally to the stickers_xxx directory
         String stickerPath = VeLiveEffectHelper.getStickerPathByName("xxx");
+        if (!VeLiveSDKHelper.isFileExists(stickerPath)) {
+            return;
+        }
+        IVideoEffect rtcVideoEffect = mAnchorManager.getRTCVideo().getVideoEffectInterface();
         //  Set the sticker effect package path
-        mAnchorManager.getRTCVideo().appendVideoEffectNodes(Collections.singletonList(stickerPath));
+        rtcVideoEffect.appendEffectNodes(Collections.singletonList(stickerPath));
     }
 
     private MixedStreamConfig.MixedStreamLayoutConfig getTranscodingLayout() {

@@ -10,7 +10,7 @@
 //  AppDelegate.h
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2022/10/18.
 //
 
 #import <UIKit/UIKit.h>

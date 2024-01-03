@@ -9,7 +9,7 @@
 //  VeLiveLinkViewController.m
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/6/30.
 //
 
 #import "VeLiveLinkViewController.h"

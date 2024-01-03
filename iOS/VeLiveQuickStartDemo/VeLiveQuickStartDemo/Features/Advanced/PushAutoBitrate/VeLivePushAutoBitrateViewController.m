@@ -9,7 +9,7 @@
 //  VeLivePushAutoBitrateViewController.m
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/6/28.
 //
 /*
 Bit rate adaptive streaming
@@ -24,7 +24,7 @@ Bit rate adaptive streaming
  4, set the encoding configuration API: [self.livePusher setVideoEncoderConfiguration: videoEncodeCfg]
  5, set the bit rate adaptive sensitivity API: [self.livePusher setProperty: @"VeLiveKeySetBitrateAdaptStrategy" value: @"NORMAL"]
  6, set the preview API: [self.livePusher setRenderView: self.view];
- 7, open the microphone capture API: [self.livePusher startAudioC
+ 7, open the microphone capture API: [self.livePusher startAudioCapture:(VeLiveAudioCaptureMicrophone)];
  8、open the camera capture API: [self.livePusher startVideoCapture:(VeLiveVideoCaptureFrontCamera)];
  9、start push API：[self.livePusher startPush:@"rtmp://push.example.com/rtmp"];
  */

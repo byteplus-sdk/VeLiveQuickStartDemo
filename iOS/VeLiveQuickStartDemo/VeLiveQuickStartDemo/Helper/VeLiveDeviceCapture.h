@@ -9,7 +9,7 @@
 //  VeLiveDeviceCapture.h
 //  VeLiveQuickStartDemo
 //
-//  Created by BytePlus Team on 2023/12/04.
+//  Created by BytePlus Team on 2023/6/28.
 //
 /*
  This class provides basic camera capture capabilities for use in custom capture.

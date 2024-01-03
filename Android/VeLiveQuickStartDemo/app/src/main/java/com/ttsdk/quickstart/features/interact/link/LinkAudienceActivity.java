@@ -272,6 +272,9 @@ public class LinkAudienceActivity extends AppCompatActivity {
         }
         //  Sticker effect package, find the correct resource path, generally to the stickers_xxx directory
         String stickerPath = VeLiveEffectHelper.getStickerPathByName("xxx");
+        if (!VeLiveSDKHelper.isFileExists(stickerPath)) {
+            return;
+        }
         IVideoEffect effect = mAudienceManager.getRTCVideo().getVideoEffectInterface();
         //  Set the sticker effect package path
         effect.appendEffectNodes(Collections.singletonList(stickerPath));
