@@ -47,11 +47,13 @@
 
 "Home_Picture_In_Picture" = "Picture In Picture";
 
-"Home_Pull_Feed" = "Feed Flow";
+"Home_Pull_RTM" = "RTM Pull";
 
 "Home_Push_Streaming_Bitrate_Adaptive" = "Push streaming bitrate adaptive";
 
 "Home_RTM_Push_Streaming" = "RTM ultra-low latency push streaming";
+
+"Home_RTM_Pull_Streaming" = "RTM ultra-low latency pull streaming";
 
 "Interact_Link" = "Audience Link";
 
@@ -127,7 +129,7 @@
 
 "Pull_Stream_Stop_Play" = "Stop";
 
-"Pull_Stream_Url_Tip" = "Pull Url";
+"Pull_Stream_Url_Tip" = "Stream Name";
 
 "Pull_UnMute" = "UnMute";
 
@@ -165,7 +167,7 @@
 
 "Push_UnMute" = "UnMute";
 
-"Push_Url_Tip" = "Push Url";
+"Push_Url_Tip" = "Stream Name";
 
 "Start_Picture_In_Picture" = "Open picture-in-picture";
 
@@ -192,3 +194,9 @@
 "token" = "Token";
 
 "user_id" = "User ID";
+
+"Generate_Push_Url_Tip" = "generate push url...";
+
+"Generate_Pull_Url_Tip" = "generate pull url...";
+
+"config_stream_name_tip" = "Please config stream name";

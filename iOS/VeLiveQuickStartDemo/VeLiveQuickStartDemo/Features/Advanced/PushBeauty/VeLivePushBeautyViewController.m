@@ -90,7 +90,8 @@ Camera push stream, integrate intelligent beautification special effects
     //  Note: This method only takes effect when the SDK of intelligent beautification special effects has been integrated in the project
     VeLiveVideoEffectManager *effectManager = [self.livePusher getVideoEffectManager];
     //  Effects Authentication License path, please find the correct path according to the project configuration
-    NSString *licensePath =  [NSBundle.mainBundle pathForResource:@"LicenseBag.bundle/xxx.licbag" ofType:nil];
+    NSString *licensePath =  [NSString stringWithFormat:@"LicenseBag.bundle/%@", EFFECT_LICENSE_NAME];
+    licensePath = [NSBundle.mainBundle pathForResource:licensePath ofType:nil];
     //  Effect model effect package path
     NSString *algoModelPath = [NSBundle.mainBundle pathForResource:@"ModelResource.bundle" ofType:nil];
     
@@ -112,18 +113,29 @@ Camera push stream, integrate intelligent beautification special effects
 
 - (IBAction)pushControl:(UIButton *)sender {
     if (self.urlTextField.text.length <= 0) {
-        NSLog(@"VeLiveQuickStartDemo: Please Config Url");
+        self.infoLabel.text = NSLocalizedString(@"config_stream_name_tip", nil);
         return;
     }
     if (!sender.isSelected) {
-        //  Start pushing the stream, push the stream address support: rtmp protocol, http protocol (RTM)
-        [self.livePusher startPush:self.urlTextField.text];
+        self.infoLabel.text = NSLocalizedString(@"Generate_Push_Url_Tip", nil);
+        self.view.userInteractionEnabled = NO;
+        [VeLiveURLGenerator genPushURLForApp:LIVE_APP_NAME
+                                  streamName:self.urlTextField.text
+                                  completion:^(VeLiveURLRootModel<VeLivePushURLModel *> * _Nullable model, NSError * _Nullable error) {
+            self.infoLabel.text = error.localizedDescription;
+            self.view.userInteractionEnabled = YES;
+            if (error != nil) {
+                return;
+            }
+            //  Start pushing the stream, push the stream address support: rtmp protocol, http protocol (RTM)
+            [self.livePusher startPush:[model.result getRtmpPushUrl]];
+            sender.selected = !sender.isSelected;
+        }];
     } else {
         //  Stop streaming
         [self.livePusher stopPush];
+        sender.selected = !sender.isSelected;
     }
-    
-    sender.selected = !sender.isSelected;
 }
 
 - (IBAction)beautyControl:(UIButton *)sender {
@@ -182,7 +194,7 @@ Camera push stream, integrate intelligent beautification special effects
     self.title = NSLocalizedString(@"Push_Beauty", nil);
     self.navigationItem.backBarButtonItem.title = nil;
     self.navigationItem.backButtonTitle = nil;
-    self.urlTextField.text = LIVE_PUSH_URL;
+    self.urlLabel.text = NSLocalizedString(@"Push_Url_Tip", nil);
     [self.pushControlBtn setTitle:NSLocalizedString(@"Push_Start_Push", nil) forState:(UIControlStateNormal)];
     [self.pushControlBtn setTitle:NSLocalizedString(@"Push_Stop_Push", nil) forState:(UIControlStateSelected)];
     

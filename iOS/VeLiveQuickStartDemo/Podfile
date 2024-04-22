@@ -1,5 +1,6 @@
 # Uncomment the next line to define a global platform for your project
 source 'https://github.com/volcengine/volcengine-specs.git'
+source 'https://github.com/byteplus-sdk/byteplus-specs.git'
 source 'https://cdn.cocoapods.org/'
 platform :ios, '11.0'
 install! 'cocoapods',
@@ -10,7 +11,7 @@ inhibit_all_warnings!
 
 target 'VeLiveQuickStartDemo' do
   # Integrated push-pull streaming functionality
-  pod 'TTSDKFramework', '1.40.200.5-premium', :subspecs => %w[LivePull-RTS LivePush-RTS]
+  pod 'TTSDKFramework', '1.41.200.2-premium', :subspecs => %w[LivePull-RTS LivePush-RTS]
 end
 
 post_install do |installer|

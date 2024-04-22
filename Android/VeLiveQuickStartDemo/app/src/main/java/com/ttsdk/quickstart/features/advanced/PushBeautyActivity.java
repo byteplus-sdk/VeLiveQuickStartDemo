@@ -9,7 +9,7 @@ package com.ttsdk.quickstart.features.advanced;
 import static com.ss.avframework.live.VeLivePusherDef.VeLiveAudioCaptureType.VeLiveAudioCaptureMicrophone;
 import static com.ss.avframework.live.VeLivePusherDef.VeLiveVideoCaptureType.VeLiveVideoCaptureFrontCamera;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +26,10 @@ import com.ss.avframework.live.VeLivePusherConfiguration;
 import com.ss.avframework.live.VeLivePusherDef;
 import com.ss.avframework.live.VeLivePusherObserver;
 import com.ss.avframework.live.VeLiveVideoEffectManager;
+import com.ttsdk.quickstart.helper.sign.VeLiveURLGenerator;
+import com.ttsdk.quickstart.helper.sign.model.VeLivePushURLModel;
+import com.ttsdk.quickstart.helper.sign.model.VeLiveURLError;
+import com.ttsdk.quickstart.helper.sign.model.VeLiveURLRootModel;
 
 /*
 Camera push streaming, integrated intelligent beautification special effects
@@ -47,16 +51,17 @@ Camera push streaming, integrated intelligent beautification special effects
  11、Setup Sticker API:  mLivePusher.getVideoEffectManager().setSticker("");
  */
 public class PushBeautyActivity extends AppCompatActivity {
+    private static final String TAG = "PushBeautyActivity";
     private VeLivePusher mLivePusher;
     private EditText mUrlText;
     private TextView mInfoView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push_beauty);
         mInfoView = findViewById(R.id.push_info_text_view);
         mUrlText = findViewById(R.id.url_input_view);
-        mUrlText.setText(VeLiveSDKHelper.LIVE_PUSH_URL);
         setupLivePusher();
         setupEffectSDK();
     }
@@ -92,14 +97,30 @@ public class PushBeautyActivity extends AppCompatActivity {
 
 
     public void pushControl(View view) {
-        ToggleButton toggleButton = (ToggleButton)view;
+        ToggleButton toggleButton = (ToggleButton) view;
         if (mUrlText.getText().toString().isEmpty()) {
-            Log.e("VeLiveQuickStartDemo", "Please Config Url");
+            Log.e(TAG, "Please Config Url");
             return;
         }
         if (toggleButton.isChecked()) {
-            //  Start pushing the stream, push the stream address support: rtmp protocol, http protocol (RTM)
-            mLivePusher.startPush(mUrlText.getText().toString());
+            view.setEnabled(false);
+            mInfoView.setText(R.string.Generate_Push_Url_Tip);
+            VeLiveURLGenerator.genPushUrl(VeLiveSDKHelper.LIVE_APP_NAME, mUrlText.getText().toString(), new VeLiveURLGenerator.VeLiveURLCallback<VeLivePushURLModel>() {
+                @Override
+                public void onSuccess(VeLiveURLRootModel<VeLivePushURLModel> model) {
+                    view.setEnabled(true);
+                    mInfoView.setText("");
+                    //  Start pushing the stream, push the stream address support: rtmp protocol, http protocol (RTM)
+                    mLivePusher.startPush(model.result.getRtmpPushUrl());
+                }
+
+                @Override
+                public void onFailed(VeLiveURLError error) {
+                    view.setEnabled(true);
+                    mInfoView.setText(error.message);
+                    toggleButton.setChecked(false);
+                }
+            });
         } else {
             //  Stop streaming
             mLivePusher.stopPush();
@@ -107,30 +128,34 @@ public class PushBeautyActivity extends AppCompatActivity {
     }
 
     public void setupEffectSDK() {
-        //  Note: This method only takes effect when the SDK of intelligent beautification special effects has been integrated in the project
-        VeLiveVideoEffectManager effectManager = mLivePusher.getVideoEffectManager();
-        //  Effects Authentication License path, please find the correct path according to the project configuration
-        String licPath = VeLiveEffectHelper.getLicensePath("xxx.licbag");
-        //  Effect model effect package path
-        String algoModePath = VeLiveEffectHelper.getModelPath();
-        if (!VeLiveSDKHelper.isFileExists(licPath)) {
-            return;
-        }
-        //  Create Beauty Configuration
-        VeLivePusherDef.VeLiveVideoEffectLicenseConfiguration licConfig = VeLivePusherDef.VeLiveVideoEffectLicenseConfiguration.create(licPath);
-        //  Set Beauty Configuration
-        effectManager.setupWithConfig(licConfig);
-        //  Set algorithm package path
-        effectManager.setAlgorithmModelPath(algoModePath);
-        //  Turn on beauty effects
-        effectManager.setEnable(true, new VeLivePusherDef.VeLiveVideoEffectCallback() {
-            @Override
-            public void onResult(int result, String msg) {
-                if (result != 0) {
-                    Log.e("VeLiveQuickStartDemo", "Effect init error:" + msg);
-                }
+        try {
+            //  Note: This method only takes effect when the SDK of intelligent beautification special effects has been integrated in the project
+            VeLiveVideoEffectManager effectManager = mLivePusher.getVideoEffectManager();
+            //  Effects Authentication License path, please find the correct path according to the project configuration
+            String licPath = VeLiveEffectHelper.getLicensePath("xxx.licbag");
+            //  Effect model effect package path
+            String algoModePath = VeLiveEffectHelper.getModelPath();
+            if (!VeLiveSDKHelper.isFileExists(licPath)) {
+                return;
             }
-        });
+            //  Create Beauty Configuration
+            VeLivePusherDef.VeLiveVideoEffectLicenseConfiguration licConfig = VeLivePusherDef.VeLiveVideoEffectLicenseConfiguration.create(licPath);
+            //  Set Beauty Configuration
+            effectManager.setupWithConfig(licConfig);
+            //  Set algorithm package path
+            effectManager.setAlgorithmModelPath(algoModePath);
+            //  Turn on beauty effects
+            effectManager.setEnable(true, new VeLivePusherDef.VeLiveVideoEffectCallback() {
+                @Override
+                public void onResult(int result, String msg) {
+                    if (result != 0) {
+                        Log.e(TAG, "Effect init error:" + msg);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public void beautyControl(View view) {
@@ -139,22 +164,30 @@ public class PushBeautyActivity extends AppCompatActivity {
         if (!VeLiveSDKHelper.isFileExists(beautyPath)) {
             return;
         }
-        //  Set up beauty effect package
-        mLivePusher.getVideoEffectManager().setComposeNodes(new String[]{ beautyPath });
-        //  Set the beauty effect intensity, NodeKey can be obtained in the config_file under the effect package, if there is no config_file, please contact the business consultation
-        mLivePusher.getVideoEffectManager().updateComposerNodeIntensity(beautyPath, "whiten", 0.5F);
+        try {
+            //  Set up beauty effect package
+            mLivePusher.getVideoEffectManager().setComposeNodes(new String[]{beautyPath});
+            //  Set the beauty effect intensity, NodeKey can be obtained in the config_file under the effect package, if there is no config_file, please contact the business consultation
+            mLivePusher.getVideoEffectManager().updateComposerNodeIntensity(beautyPath, "whiten", 0.5F);
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public void filterControl(View view) {
         //  Filter effect package, find the correct resource path, generally to the Filter_01_xx directory
-        String filterPath = VeLiveEffectHelper.getFilterPathByName("xxx");;
+        String filterPath = VeLiveEffectHelper.getFilterPathByName("xxx");
         if (!VeLiveSDKHelper.isFileExists(filterPath)) {
             return;
         }
-        //  Set the filter effect package path
-        mLivePusher.getVideoEffectManager().setFilter(filterPath);
-        //  Set filter effect intensity
-        mLivePusher.getVideoEffectManager().updateFilterIntensity(0.5F);
+        try {
+            //  Set the filter effect package path
+            mLivePusher.getVideoEffectManager().setFilter(filterPath);
+            //  Set filter effect intensity
+            mLivePusher.getVideoEffectManager().updateFilterIntensity(0.5F);
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public void stickerControl(View view) {
@@ -163,19 +196,23 @@ public class PushBeautyActivity extends AppCompatActivity {
         if (!VeLiveSDKHelper.isFileExists(stickerPath)) {
             return;
         }
-        //  Set the sticker effect package path
-        mLivePusher.getVideoEffectManager().setSticker(stickerPath);
+        try {
+            //  Set the sticker effect package path
+            mLivePusher.getVideoEffectManager().setSticker(stickerPath);
+        } catch (Exception e){
+            Log.e(TAG, e.toString());
+        }
     }
 
     private VeLivePusherObserver pusherObserver = new VeLivePusherObserver() {
         @Override
         public void onError(int code, int subCode, String msg) {
-            Log.d("VeLiveQuickStartDemo", "Error" + code + subCode + msg);
+            Log.d(TAG, "Error" + code + subCode + msg);
         }
 
         @Override
         public void onStatusChange(VeLivePusherDef.VeLivePusherStatus status) {
-            Log.d("VeLiveQuickStartDemo", "Status" + status);
+            Log.d(TAG, "Status" + status);
         }
     };
 

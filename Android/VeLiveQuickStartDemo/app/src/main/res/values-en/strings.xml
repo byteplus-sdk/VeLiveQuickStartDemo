@@ -25,9 +25,9 @@
     <string name="Home_Live_Beauty_Filter">Beauty Filter</string>
     <string name="Home_Live_Pull_Streaming">Live Pull streaming</string>
     <string name="Home_Picture_In_Picture">Picture In Picture</string>
-    <string name="Home_Pull_Feed">Feed Flow</string>
     <string name="Home_Push_Streaming_Bitrate_Adaptive">Push streaming bitrate adaptive</string>
     <string name="Home_RTM_Push_Streaming">RTM ultra-low latency push streaming</string>
+    <string name="Home_RTM_Pull_Streaming">RTM ultra-low latency pull streaming</string>
     <string name="Interact_Link">Audience Link</string>
     <string name="Interact_Link_Anchor">I\'m an anchor</string>
     <string name="Interact_Link_Anchor_Title">Anchor</string>
@@ -65,7 +65,7 @@
     <string name="Pull_Stream_Info_Video_Size">Video Size</string>
     <string name="Pull_Stream_Start_Play">Start</string>
     <string name="Pull_Stream_Stop_Play">Stop</string>
-    <string name="Pull_Stream_Url_Tip">Pull Url</string>
+    <string name="Pull_Stream_Url_Tip">Stream Name</string>
     <string name="Pull_UnMute">UnMute</string>
     <string name="Push_Auto_Bitrate">Auto Bitrate</string>
     <string name="Push_Beauty">Push Beauty</string>
@@ -84,11 +84,12 @@
     <string name="Push_Start_Push">Start Push</string>
     <string name="Push_Stop_Push">Stop Push</string>
     <string name="Push_UnMute">UnMute</string>
-    <string name="Push_Url_Tip">Push Url</string>
+    <string name="Push_Url_Tip">Stream Name</string>
+    <string name="Generate_Push_Url_Tip">generate push url…</string>
+    <string name="Generate_Pull_Url_Tip">generate pull url…</string>
     <string name="Start_Picture_In_Picture">Open picture-in-picture</string>
     <string name="Stop_Picture_In_Picture">Stop picture-in-picture</string>
     <string name="app_name">veLive Quick Start</string>
-    <string name="input_url_list">Please enter multiple URL addresses, separated by newlines</string>
     <string name="other_room_id">Other Room ID</string>
     <string name="other_token">Other Token</string>
     <string name="pull_url">Pull Url</string>
@@ -101,4 +102,7 @@
     <string name="pip_authorization_failed">Authorization Failed</string>
     <string name="pip_authorization_success">Authorization Success</string>
     <string name="pip_require_authorization">Currently no permission, please authorize</string>
+    <string name="pip_running_in_background">Running In Background</string>
+    <string name="pip_not_support">Not Support Pip</string>
+    <string name="config_stream_name_tip">Please config stream name</string>
 </resources>

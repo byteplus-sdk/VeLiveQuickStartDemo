@@ -17,6 +17,8 @@
 
 @interface VeLiveLinkAnchorViewController () <VeLiveAnchorDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
+@property (weak, nonatomic) IBOutlet UILabel *urlLabel;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *pushControlBtn;
 @property (weak, nonatomic) IBOutlet UIButton *seiControlBtn;
 @property (weak, nonatomic) IBOutlet UIButton *interactControlBtn;
@@ -63,17 +65,15 @@
     [self.liveAnchorManager startVideoCapture];
     //  Turn on audio capture
     [self.liveAnchorManager startAudioCapture];
-    //  Start pushing
-    [self startPush];
 }
 
-- (void)startPush {
-    if (self.urlTextField.text.length <= 0) {
-        NSLog(@"VeLiveQuickStartDemo: Please config push url");
+- (void)startPush:(NSString *)url {
+    if (url.length <= 0) {
+        self.infoLabel.text = NSLocalizedString(@"config_stream_name_tip", nil);
         return;
     }
     //  Start pushing
-    [self.liveAnchorManager startPush:self.urlTextField.text];
+    [self.liveAnchorManager startPush:url];
 }
 
 - (void)stopPush {
@@ -87,6 +87,7 @@
     [self.remoteUserViews.allValues makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.remoteUserViews removeAllObjects];
 }
+
 - (void)startInteractive {
     [self clearInteractUsers];
     //  Start Lianmai
@@ -103,12 +104,30 @@
 }
 
 - (IBAction)pushControl:(UIButton *)sender {
-    if (!sender.isSelected) {
-        [self startPush];
-    } else {
-        [self stopPush];
+    if (self.urlTextField.text.length <= 0) {
+        self.infoLabel.text = NSLocalizedString(@"config_stream_name_tip", nil);
+        return;
     }
-    sender.selected = !sender.isSelected;
+    if (!sender.isSelected) {
+        self.infoLabel.text = NSLocalizedString(@"Generate_Push_Url_Tip", nil);
+        self.view.userInteractionEnabled = NO;
+        [VeLiveURLGenerator genPushURLForApp:LIVE_APP_NAME
+                                  streamName:self.urlTextField.text
+                                  completion:^(VeLiveURLRootModel<VeLivePushURLModel *> * _Nullable model, NSError * _Nullable error) {
+            self.infoLabel.text = error.localizedDescription;
+            self.view.userInteractionEnabled = YES;
+            if (error != nil) {
+                return;
+            }
+            //  Start pushing the stream, push the stream address support: rtmp protocol, http protocol (RTM)
+            [self startPush:[model.result getRtmpPushUrl]];
+            sender.selected = !sender.isSelected;
+        }];
+    } else {
+        //  Stop streaming
+        [self stopPush];
+        sender.selected = !sender.isSelected;
+    }
 }
 
 - (IBAction)interactControl:(UIButton *)sender {
@@ -129,7 +148,8 @@
     ByteRTCVideo *rtcVideo = self.liveAnchorManager.rtcVideo;
     
     //  Effects Authentication License path, please find the correct path according to the project configuration
-    NSString *licensePath = [NSBundle.mainBundle pathForResource:@"LicenseBag.bundle/xxx.licbag" ofType:nil];
+    NSString *licensePath = [NSString stringWithFormat:@"LicenseBag.bundle/%@", EFFECT_LICENSE_NAME];
+    licensePath = [NSBundle.mainBundle pathForResource:licensePath ofType:nil];
     
     //  Effect algorithm effect package path
     NSString *algoModelPath = [NSBundle.mainBundle pathForResource:@"ModelResource.bundle" ofType:nil];
@@ -281,7 +301,7 @@
     self.title = NSLocalizedString(@"Interact_Link_Anchor_Title", nil);
     self.navigationItem.backBarButtonItem.title = nil;
     self.navigationItem.backButtonTitle = nil;
-    self.urlTextField.text = LIVE_PUSH_URL;
+    self.urlLabel.text = NSLocalizedString(@"Push_Url_Tip", nil);
     [self.pushControlBtn setTitle:NSLocalizedString(@"Push_Start_Push", nil) forState:(UIControlStateNormal)];
     [self.pushControlBtn setTitle:NSLocalizedString(@"Push_Stop_Push", nil) forState:(UIControlStateSelected)];
     

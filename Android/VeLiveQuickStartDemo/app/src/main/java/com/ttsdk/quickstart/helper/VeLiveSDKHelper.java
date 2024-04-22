@@ -19,25 +19,28 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.ttsdk.quickstart.R;
+import com.bytedance.ttnet.TTNetInit;
 import com.pandora.common.env.Env;
 import com.pandora.common.env.config.Config;
 import com.pandora.common.env.config.LogConfig;
 import com.pandora.ttlicense2.LicenseManager;
 import com.ss.avframework.live.VeLivePusherDef;
 import com.ss.videoarch.liveplayer.VeLivePlayerStatistics;
+import com.ttsdk.quickstart.R;
+import com.ttsdk.quickstart.helper.sign.VeLiveRTCTokenMaker;
+import com.ttsdk.quickstart.helper.sign.VeLiveURLGenerator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VeLiveSDKHelper {
+    public static String TAG = "VeLiveSDKHelper";
 
     // AppID
     public static String TTSDK_APP_ID = "";
@@ -45,54 +48,51 @@ public class VeLiveSDKHelper {
      License name, the current Demo file is stored in the same directory as this file. If you do SDK quick verification, you can directly replace the content of the ttsdk.lic file
      */
     public static String TTSDK_LICENSE_NAME = "ttsdk.lic";
-
+    /**
+    Do not use in production environment, please generate push and pull stream addresses in the server in the production environment
+    */
     /*
-     RTMP, RTM, Quic push stream address
-      generation method: generate https://console.volcengine.com/live/main/locationGenerate through the console
+     *  Access Key https://console.byteplus.com/iam/keymanage
      */
-    public static String LIVE_PUSH_URL = "";
-    public static String LIVE_RTM_PUSH_URL = "";
+    public static String ACCESS_KEY_ID = "";
+    public static String SECRET_ACCESS_KEY = "";
 
     /*
-     RTM, rtmp, flv, m3u8 pull stream address
-      generation method: generate https://console.volcengine.com/live/main/locationGenerate through the console
+     * vhost for live push and pull streaming
+     * https://console.byteplus.com/iam/resourcemanage/project/default/
      */
-    public static String LIVE_PULL_URL = "";
-    public static String LIVE_RTM_PULL_URL = "";
+    public static String LIVE_VHOST = "";
+
+    /*
+     * Used when generating the live push-pull stream address
+     * eg.: https://pull.example.com/live/abc.flv
+     */
+    public static String LIVE_APP_NAME = "live";
 
 
     /*
-     Interactive Live AppID
+     * domain for live push https://console.byteplus.com/live/main/domain/list
+     */
+    public static String LIVE_PUSH_DOMAIN = "";
+
+    /*
+     * domain for live pull https://console.byteplus.com/live/main/domain/list
+     */
+    public static String LIVE_PULL_DOMAIN = "";
+
+    /*
+     Interactive Live AppID https://console.byteplus.com/rtc/listRTC
      */
     public static String RTC_APPID = "";
-
+    /**
+    Do not use in production environment, please generate token in the server in the production environment
+    */
     /*
-     Interactive live streaming host room ID
+     Interactive Live AppKey https://console.byteplus.com/rtc/listRTC
      */
-    public static String RTC_ROOM_ID = "";
+    public static String RTC_APPKEY = "";
 
-    /*
-     Interactive live streaming host user ID
-     */
-    public static String RTC_USER_ID = "";
-
-    /*
-     Interactive live streaming host user Token
-     Generation method: use live streaming host room ID and live streaming host user ID to generate
-     https://console.volcengine.com/rtc/listRTC in the RTC console
-     */
-    public static String RTC_USER_TOKEN = "";
-
-    /*
-     When live streaming host and live streaming host PK, the room ID of the other live streaming host
-     */
-    public static String RTC_OTHER_ROOM_ID = "";
-
-    /*
-     When live streaming host and live streaming host PK, the current live streaming host joins the token
-      generation method in the other party's live streaming host room: use the user ID of the current live streaming host and the room ID of the other party's live streaming host to generate it in the console
-     */
-    public static String RTC_OTHER_ROOM_TOKEN = "";
+    public static String EFFECT_LICENSE_NAME = "";
 
     private static Context sAppContext;
 
@@ -115,7 +115,7 @@ public class VeLiveSDKHelper {
         //  log output level
         logBuilder.setLogLevel(LogConfig.LogLevel.Debug);
 
-        Config.Builder configBuilder = new  Config.Builder();
+        Config.Builder configBuilder = new Config.Builder();
         //  Configure App Context
         configBuilder.setApplicationContext(context);
         //  Channel configuration, general transmission and distribution type, closed beta, public beta, online, etc
@@ -146,22 +146,27 @@ public class VeLiveSDKHelper {
         public void onLicenseLoadSuccess(@NonNull String licenseUri, @NonNull String licenseId) {
             Log.e("VeLiveQuickStartDemo", "License Load Success" + licenseId);
         }
+
         @Override
         public void onLicenseLoadError(@NonNull String licenseUri, @NonNull Exception e, boolean retryAble) {
             Log.e("VeLiveQuickStartDemo", "License Load Error" + e);
         }
+
         @Override
         public void onLicenseLoadRetry(@NonNull String licenseUri) {
 
         }
+
         @Override
         public void onLicenseUpdateSuccess(@NonNull String licenseUri, @NonNull String licenseId) {
 
         }
+
         @Override
         public void onLicenseUpdateError(@NonNull String licenseUri, @NonNull Exception e, boolean retryAble) {
 
         }
+
         @Override
         public void onLicenseUpdateRetry(@NonNull String licenseUri) {
 
@@ -181,15 +186,16 @@ public class VeLiveSDKHelper {
         infoStr += getInfoString(R.string.Camera_Push_Info_Video_Capture_Resolution, statistics.captureWidth + ", " + statistics.captureHeight, "\n");
 
         infoStr += getInfoString(R.string.Camera_Push_Info_Video_Push_Resolution, statistics.encodeWidth + ", " + statistics.encodeHeight, " ");
-        infoStr += getInfoString(R.string.Camera_Push_Info_Video_Capture_FPS, (int)statistics.captureFps, "\n");
+        infoStr += getInfoString(R.string.Camera_Push_Info_Video_Capture_FPS, (int) statistics.captureFps, "\n");
 
-        infoStr += getInfoString(R.string.Camera_Push_Info_Video_Capture_IO_FPS, (int)statistics.captureFps + "/" + (int)statistics.encodeFps, " ");
+        infoStr += getInfoString(R.string.Camera_Push_Info_Video_Capture_IO_FPS, (int) statistics.captureFps + "/" + (int) statistics.encodeFps, " ");
 
         infoStr += getInfoString(R.string.Camera_Push_Info_Video_Encode_Codec, statistics.codec, "\n");
 
         infoStr += getInfoString(R.string.Camera_Push_Info_Real_Time_Trans_FPS, (int)statistics.transportFps, "\n");
         infoStr += getInfoString(R.string.Camera_Push_Info_Real_Time_Encode_Bitrate, (int)(statistics.encodeVideoBitrate / 1000), " kbps ");
         infoStr += getInfoString(R.string.Camera_Push_Info_Real_Time_Trans_Bitrate, (int)(statistics.transportVideoBitrate / 1000), " kbps ");
+        Log.i(TAG, infoStr);
         return infoStr;
     }
 
@@ -199,7 +205,7 @@ public class VeLiveSDKHelper {
         String videoSize = "width:" + statistics.width + "height:" + statistics.height;
         infoStr += getInfoString(R.string.Pull_Stream_Info_Video_Size, videoSize, "\n");
 
-        infoStr += getInfoString(R.string.Pull_Stream_Info_Video_FPS, (int)statistics.fps, " ");
+        infoStr += getInfoString(R.string.Pull_Stream_Info_Video_FPS, (int) statistics.fps, " ");
         infoStr += getInfoString(R.string.Pull_Stream_Info_Video_Bitrate, statistics.bitrate, " kbps\n");
 
         infoStr += getInfoString(R.string.Pull_Stream_Info_Video_BufferTime, statistics.videoBufferMs, "ms ");
@@ -214,6 +220,7 @@ public class VeLiveSDKHelper {
         infoStr += getInfoString(R.string.Pull_Stream_Info_Delay_Time, statistics.delayMs, "ms ");
         infoStr += getInfoString(R.string.Pull_Stream_Info_Stall_Time, statistics.stallTimeMs, " ms\n");
         infoStr += getInfoString(R.string.Pull_Stream_Info_Is_HardWareDecode, statistics.isHardwareDecode, " ");
+        Log.i(TAG, infoStr);
         return infoStr;
     }
 
@@ -270,6 +277,7 @@ public class VeLiveSDKHelper {
 
     /**
      * [Get application version name information]
+     *
      * @param context
      * @return The version name of the current application
      */

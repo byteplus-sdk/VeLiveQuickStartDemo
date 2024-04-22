@@ -13,7 +13,6 @@
 //
 
 #import "VeLiveSDKHelper.h"
-
 @implementation VeLiveSDKHelper
 + (void)initTTSDK {
     TTSDKConfiguration *cfg = [TTSDKConfiguration defaultConfigurationWithAppID:TTSDK_APP_ID
@@ -29,7 +28,7 @@
     //  Default Internal Initialization of AppLog
     cfg.shouldInitAppLog = YES;
     //  Configure the service area, the default CN
-    cfg.serviceVendor = TTSDKServiceVendorSG;
+    cfg.appRegion = TTSDKServiceVendorSG;
     //  Configure the unique ID of the current user. Generally, the user ID on the service side is transmitted. If it cannot be obtained at the initial time, it can be configured when the user ID is obtained.
     [TTSDKManager setCurrentUserUniqueID:@"VeLiveQuickStartDemo"];
     //  Whether to report event tracking logs
@@ -62,7 +61,6 @@
     cfg.logConfiguration = logConfig;
     //  Start TTSDK
     [TTSDKManager startWithConfiguration:cfg];
-
 }
 
 
@@ -101,6 +99,7 @@
     [attributedString appendAttributedString:GetInfoAttributeString(@"Camera_Push_Info_Real_Time_Trans_FPS", @(statistics.transportFps), @"\n")];
     [attributedString appendAttributedString:GetInfoAttributeString(@"Camera_Push_Info_Real_Time_Encode_Bitrate", @(statistics.encodeVideoBitrate), @" kbps")];
     [attributedString appendAttributedString:GetInfoAttributeString(@"Camera_Push_Info_Real_Time_Trans_Bitrate", @(statistics.transportVideoBitrate), @" kbps")];
+    NSLog(@"%@", attributedString.string);
     return attributedString;
 }
 
@@ -139,6 +138,7 @@
     [attributedString appendAttributedString:GetInfoAttributeString(@"Pull_Stream_Info_Delay_Time", @(statistics.delayMs), @"ms ")];
     [attributedString appendAttributedString:GetInfoAttributeString(@"Pull_Stream_Info_Stall_Time", @(statistics.stallTimeMs), @" ms\n")];
     [attributedString appendAttributedString:GetInfoAttributeString(@"Pull_Stream_Info_Is_HardWareDecode", @(statistics.isHardWareDecode), @"")];
+    NSLog(@"%@", attributedString.string);
     return attributedString;
 }
 

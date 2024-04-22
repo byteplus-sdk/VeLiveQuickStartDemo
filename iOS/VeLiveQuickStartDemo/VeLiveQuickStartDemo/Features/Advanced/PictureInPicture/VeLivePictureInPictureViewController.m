@@ -78,16 +78,6 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
     //  Set render fill mode
     [self.livePlayer setRenderFillMode:(VeLivePlayerFillModeAspectFill)];
     
-    //  Set broadcast address, support rtmp, http, https protocol, flv, m3u8 format address
-    [self.livePlayer setPlayUrl:self.urlTextField.text];
-    
-    //  Start playing
-    [self.livePlayer play];
-    
-    // Enable monitor video frame callback
-    [self.livePlayer enableVideoFrameObserver:YES
-                                  pixelFormat:(VeLivePlayerPixelFormatNV12)
-                                   bufferType:(VeLivePlayerVideoBufferTypePixelBuffer)];
     
     //  Ready to PIP
     [self setupPictureInPicture];
@@ -111,14 +101,34 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
 }
 
 - (IBAction)playControl:(UIButton *)sender {
+    if (self.urlTextField.text.length <= 0) {
+        self.infoLabel.text = NSLocalizedString(@"config_stream_name_tip", nil);
+        return;
+    }
     if (sender.isSelected) {
         //  Stop playing
         [self.livePlayer stop];
+        sender.selected = !sender.isSelected;
     } else {
-        //  Start playing
-        [self.livePlayer play];
+        self.infoLabel.text = NSLocalizedString(@"Generate_Pull_Url_Tip", nil);
+        self.view.userInteractionEnabled = NO;
+        [VeLiveURLGenerator genPullURLForApp:LIVE_APP_NAME streamName:self.urlTextField.text completion:^(VeLiveURLRootModel<VeLivePullURLModel *> * _Nullable model, NSError * _Nullable error) {
+            self.infoLabel.text = error.localizedDescription;
+            self.view.userInteractionEnabled = YES;
+            if (error != nil) {
+                return;
+            }
+            //  Set broadcast address, support rtmp, http, https protocol, flv, m3u8 format address
+            [self.livePlayer setPlayUrl:[model.result getUrlWithProtocol:@"flv"]];
+            // start play
+            [self.livePlayer play];
+            // Enable monitor video frame callback
+            [self.livePlayer enableVideoFrameObserver:YES
+                                          pixelFormat:(VeLivePlayerPixelFormatNV12)
+                                           bufferType:(VeLivePlayerVideoBufferTypePixelBuffer)];
+            sender.selected = !sender.isSelected;
+        }];
     }
-    sender.selected = !sender.isSelected;
 }
 
 - (IBAction)pictureInPictureControl:(UIButton *)sender {
@@ -211,7 +221,7 @@ AVPictureInPictureSampleBufferPlaybackDelegate>
     }
 }
 
-// MARK: - VELPictureInPictureDelegate
+// MARK: - VeLivePictureInPictureDelegate
 - (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
     NSLog(@"pictureInPictureControllerWillStartPictureInPicture");
 }
@@ -287,10 +297,10 @@ restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL)
     self.title = NSLocalizedString(@"Pull_Stream", nil);
     self.navigationItem.backBarButtonItem.title = nil;
     self.navigationItem.backButtonTitle = nil;
-    self.urlTextField.text = LIVE_PULL_URL;
+    self.urlLabel.text = NSLocalizedString(@"Pull_Stream_Url_Tip", nil);
     [self.playControlBtn setTitle:NSLocalizedString(@"Pull_Stream_Start_Play", nil) forState:(UIControlStateNormal)];
     [self.playControlBtn setTitle:NSLocalizedString(@"Pull_Stream_Stop_Play", nil) forState:(UIControlStateSelected)];
-    self.playControlBtn.selected = YES;
+    self.playControlBtn.selected = NO;
     
     [self.pipontrolBtn setTitle:NSLocalizedString(@"Start_Picture_In_Picture", nil) forState:((UIControlStateNormal))];
     [self.pipontrolBtn setTitle:NSLocalizedString(@"Stop_Picture_In_Picture", nil) forState:((UIControlStateSelected))];
