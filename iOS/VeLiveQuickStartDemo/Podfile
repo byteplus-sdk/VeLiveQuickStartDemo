@@ -11,7 +11,7 @@ inhibit_all_warnings!
 
 target 'VeLiveQuickStartDemo' do
   # Integrated push-pull streaming functionality
-  pod 'TTSDKFramework', '1.41.200.2-premium', :subspecs => %w[LivePull-RTS LivePush-RTS]
+  pod 'TTSDKFramework', '1.42.300.4-premium', :subspecs => %w[LivePull-RTS LivePush-RTS VolcEngineRTC]
 end
 
 post_install do |installer|

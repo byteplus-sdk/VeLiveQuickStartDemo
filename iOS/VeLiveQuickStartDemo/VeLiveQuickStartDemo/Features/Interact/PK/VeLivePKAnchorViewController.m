@@ -72,6 +72,7 @@
         NSLog(@"VeLiveQuickStartDemo: Please config push url");
         return;
     }
+    NSLog(@"VeLiveQuickStartDemo: start push %@", url);
     //  Start pushing
     [self.liveAnchorManager startPush:url];
     [self.view sendSubviewToBack:self.previewView];
@@ -84,7 +85,7 @@
 //  Start retweeting across rooms
 - (void)startForward {
     //  Retweet across rooms
-    ForwardStreamConfiguration *cfg = [[ForwardStreamConfiguration alloc] init];
+    ByteRTCForwardStreamConfiguration *cfg = [[ByteRTCForwardStreamConfiguration alloc] init];
     cfg.roomId = self.otherRoomID;
     cfg.token = self.otherRoomToken;
     [self.liveAnchorManager startForwardStream:@[cfg]];
@@ -295,16 +296,16 @@
         region.roomID       = self.roomID;
         region.isLocalUser    = [uid isEqualToString:self.userID]; //  Determine whether it is the current live streaming host
         region.renderMode   = ByteRTCMixedStreamRenderModeHidden;
-        region.locationY        = pkViewY;
-        region.widthProportion    = pkViewWidth;
-        region.heightProportion   = pkViewHeight;
+        region.locationY        = pkViewY * self.liveAnchorManager.config.videoEncoderHeight;
+        region.width    = pkViewWidth * self.liveAnchorManager.config.videoEncoderWith;
+        region.height   = pkViewHeight * self.liveAnchorManager.config.videoEncoderHeight;
         region.alpha    = 1.0;
         
         if (region.isLocalUser) { // Current live streaming host location, for reference only
             region.locationX = 0.0;
             region.zOrder   = 0;
         } else { //  Remote user location, for reference only
-            region.locationX = (viewWidth * 0.5 + 8) / viewWidth;
+            region.locationX = (viewWidth * 0.5 + 8) / viewWidth * self.liveAnchorManager.config.videoEncoderWith;
             region.zOrder   = 1;
         }
         [regions addObject:region];

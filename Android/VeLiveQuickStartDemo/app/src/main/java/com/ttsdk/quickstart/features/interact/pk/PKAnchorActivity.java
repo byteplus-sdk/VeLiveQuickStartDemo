@@ -63,6 +63,7 @@ public class PKAnchorActivity extends AppCompatActivity {
     private ArrayList<String> mUsersInRoom;
     //  Live streaming host + Lianmai manager
     private VeLiveAnchorManager mAnchorManager;
+    private final VeLiveAnchorManager.Config mAnchorConfig = new VeLiveAnchorManager.Config();
 
 
     @Override
@@ -96,7 +97,7 @@ public class PKAnchorActivity extends AppCompatActivity {
         mUsersInRoom = new ArrayList<>();
         mAnchorManager = VeLiveAnchorManager.create(VeLiveSDKHelper.RTC_APPID, mUserID);
         //  Set up push configuration
-        mAnchorManager.setConfig(new VeLiveAnchorManager.Config());
+        mAnchorManager.setConfig(mAnchorConfig);
         //  Configure local preview view
         mAnchorManager.setLocalVideoView(mLocalView);
         //  Enable video capture
@@ -268,16 +269,16 @@ public class PKAnchorActivity extends AppCompatActivity {
             region.setRoomID(mRoomID);
             region.setRenderMode(MixedStreamConfig.MixedStreamRenderMode.MIXED_STREAM_RENDER_MODE_HIDDEN);
             region.setIsLocalUser(Objects.equals(uid, mUserID));
-            region.setLocationY(pkViewY);
-            region.setWidthProportion(pkViewWidth);
-            region.setHeightProportion(pkViewHeight);
+            region.setLocationY((int)(pkViewY * mAnchorConfig.mVideoEncoderWidth));
+            region.setWidth((int)(pkViewWidth * mAnchorConfig.mVideoEncoderWidth));
+            region.setHeight((int)(pkViewHeight * mAnchorConfig.mVideoEncoderHeight));
             region.setAlpha(1);
             if (region.getIsLocalUser()) { // Current live streaming host location, for reference only
-                region.setLocationX(0.0);
+                region.setLocationX(0);
                 region.setZOrder(0);
             } else { //  Remote user location, for reference only
                 //  130 is the width and height of the small windows, 8 is the spacing of the small windows
-                region.setLocationX((viewWidth * 0.5 + 8) / viewWidth);
+                region.setLocationX((int)((viewWidth * 0.5 + 8) / viewWidth * mAnchorConfig.mVideoEncoderWidth));
                 region.setZOrder(1);
             }
             regions[pos++] = region;

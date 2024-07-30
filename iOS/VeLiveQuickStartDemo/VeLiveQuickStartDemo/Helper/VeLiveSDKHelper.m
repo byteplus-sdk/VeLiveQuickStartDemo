@@ -32,9 +32,10 @@
     //  Configure the unique ID of the current user. Generally, the user ID on the service side is transmitted. If it cannot be obtained at the initial time, it can be configured when the user ID is obtained.
     [TTSDKManager setCurrentUserUniqueID:@"VeLiveQuickStartDemo"];
     //  Whether to report event tracking logs
-    [TTSDKManager setShouldReportToAppLog:YES];
+    [VeLiveCommon enableReportApplog:YES];
+    
     //  Log custom fields for troubleshooting
-    [TTSDKManager setAppLogCustomData:@{
+    [VeLiveCommon setAppLogCustomData:@{
         @"CustomKey" : @"CustomValue"
     }];
     //  log configuration

@@ -99,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateLiveTranscodingLayout:(ByteRTCMixedStreamLayoutConfig *)layout;
 
 //  Start retweeting across rooms
-- (void)startForwardStream:(NSArray <ForwardStreamConfiguration *> *)forwardStreamInfos;
+- (void)startForwardStream:(NSArray <ByteRTCForwardStreamConfiguration *> *)forwardStreamInfos;
 
 //  Stop retweeting across rooms
 - (void)stopForwardStream;

@@ -210,7 +210,7 @@ public class VeLiveAnchorManager {
             //  Set mirror
             mRTCVideo.setLocalVideoMirrorType(MirrorType.MIRROR_TYPE_RENDER_AND_ENCODER);
             //  Set video direction
-            mRTCVideo.setVideoOrientation(VideoOrientation.Portrait);
+            mRTCVideo.setVideoOrientation(VideoOrientation.PORTRAIT);
 
             //  Use rear camera reference code
             // mRTCVideo.switchCamera(CameraId.CAMERA_ID_BACK);

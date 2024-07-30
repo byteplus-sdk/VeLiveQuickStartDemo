@@ -58,6 +58,7 @@ public class LinkAnchorActivity extends AppCompatActivity {
     private HashMap<String, TextureView> mRemoteUserViews;
     //  Live streaming host + Lianmai manager
     private VeLiveAnchorManager mAnchorManager;
+    private final VeLiveAnchorManager.Config mAnchorConfig = new VeLiveAnchorManager.Config();
 
 
     @Override
@@ -88,7 +89,7 @@ public class LinkAnchorActivity extends AppCompatActivity {
         mRemoteUserViews = new HashMap<>();
         mAnchorManager = VeLiveAnchorManager.create(VeLiveSDKHelper.RTC_APPID, mUserID);
         //  Set up push configuration
-        mAnchorManager.setConfig(new VeLiveAnchorManager.Config());
+        mAnchorManager.setConfig(mAnchorConfig);
         //  Configure local preview view
         mAnchorManager.setLocalVideoView(mLocalView);
         //  Enable video capture
@@ -253,18 +254,19 @@ public class LinkAnchorActivity extends AppCompatActivity {
             region.setRenderMode(MixedStreamConfig.MixedStreamRenderMode.MIXED_STREAM_RENDER_MODE_HIDDEN);
             region.setIsLocalUser(Objects.equals(uid, mUserID));
             if (region.getIsLocalUser()) { // Current live streaming host location, for reference only
-                region.setLocationX(0.0);
-                region.setLocationY(0.0);
-                region.setWidthProportion(1);
-                region.setHeightProportion(1);
+                region.setLocationX(0);
+                region.setLocationY(0);
+                region.setWidth(mAnchorConfig.mVideoEncoderWidth);
+                region.setHeight(mAnchorConfig.mVideoEncoderHeight);
                 region.setZOrder(0);
                 region.setAlpha(1);
             } else { //  Remote user location, for reference only
                 //  130 is the width and height of the small windows, 8 is the spacing of the small windows
-                region.setLocationX(guestX);
-                region.setLocationY(guestStartY - (130.0 * (guestIndex + 1) + guestIndex * 8) / viewHeight);
-                region.setWidthProportion((130.0 / viewWidth));
-                region.setHeightProportion((130.0 / viewHeight));
+                region.setLocationX((int)(guestX * mAnchorConfig.mVideoEncoderWidth));
+                double yScale = guestStartY - (130.0 * (guestIndex + 1) + guestIndex * 8) / viewHeight;
+                region.setLocationY((int)(yScale * mAnchorConfig.mVideoEncoderHeight));
+                region.setWidth((int)(130.0 / viewWidth * mAnchorConfig.mVideoEncoderWidth));
+                region.setHeight((int)(130.0 / viewHeight * mAnchorConfig.mVideoEncoderHeight));
                 region.setZOrder(1);
                 region.setAlpha(1);
                 guestIndex ++;
