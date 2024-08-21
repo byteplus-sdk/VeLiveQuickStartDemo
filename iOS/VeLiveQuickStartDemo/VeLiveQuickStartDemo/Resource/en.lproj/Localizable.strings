@@ -55,6 +55,8 @@
 
 "Home_RTM_Pull_Streaming" = "RTM ultra-low latency pull streaming";
 
+"Home_Screen_Push" = "Screen Push streaming";
+
 "Interact_Link" = "Audience Link";
 
 "Interact_Link_Anchor" = "I'm an anchor";
@@ -142,6 +144,8 @@
 "Push_Beauty_Filter" = "Filter";
 
 "Push_Beauty_Sticker" = "Sticker";
+
+"Push_Screen_Capture" = "Screen Capture";
 
 "Push_Camera_Back" = "Camera(Back)";
 

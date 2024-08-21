@@ -6,7 +6,7 @@
  */
 package com.ttsdk.quickstart.helper;
 /*
- This file stores the basic configuration information of the SDK, regardless of the information. It can be modified on the interface when entering the corresponding page.
+ This file stores the basic configuration information of the SDK. Some of the information can be modified on the interface when entering the corresponding page.
  This file stores the basic configuration information of the SDK, including SDK AppID, License file name, up & down streaming address, and Lianmai interactive room ID., live streaming host/viewer UID and temporary Token
  SDK configuration information application: https://console.volcengine.com/live/main/sdk
   up & down streaming address generation reference document: https://console.volcengine.com/live/main/locationGenerate
