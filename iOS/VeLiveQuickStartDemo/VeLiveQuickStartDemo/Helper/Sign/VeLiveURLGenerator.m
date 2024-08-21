@@ -10,9 +10,6 @@
 // 
 //  Created by BytePlus Team on 2024/07/30.
 //
-//  Copyright (c) 2024/07/30 BytePlus Pte. Ltd.
-//
-//
 
 #import "VeLiveURLGenerator.h"
 #import "VeLiveURLSignTool.h"

@@ -1,0 +1,8 @@
+// App Bundle Identifier
+APP_PRODUCT_BUNDLE_IDENTIFIER = com.byteplus.ttsdk.quickstart.demo
+// Screen Capture Extension Bundle Identifier
+SC_PRODUCT_BUNDLE_IDENTIFIER = ${APP_PRODUCT_BUNDLE_IDENTIFIER}.sc
+// GroupID used for App and Extension 
+APP_SC_GROUP_ID = group.${APP_PRODUCT_BUNDLE_IDENTIFIER}
+// Macro definitions used in the code
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) APP_SC_GROUP_ID=\"group.${APP_PRODUCT_BUNDLE_IDENTIFIER}\" SC_PRODUCT_BUNDLE_IDENTIFIER=\"${SC_PRODUCT_BUNDLE_IDENTIFIER}\"

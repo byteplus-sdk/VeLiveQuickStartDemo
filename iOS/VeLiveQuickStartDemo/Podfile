@@ -9,10 +9,21 @@ install! 'cocoapods',
 use_modular_headers!
 inhibit_all_warnings!
 
+require_relative './screen_capture_extension'
+# Whether to enable screen recording and live streaming. 0 Disable 1 Enable
+ENV['VE_LIVE_ENABLE_SCREEN_CAPTURE_EXTENSION'] = '1'
+velive_enable_extension("#{Pathname.new(__FILE__).dirname}/XCConfig")
+
+
 target 'VeLiveQuickStartDemo' do
   # Integrated push-pull streaming functionality
-  pod 'TTSDKFramework', '1.42.300.4-premium', :subspecs => %w[LivePull-RTS LivePush-RTS VolcEngineRTC]
+  pod 'TTSDKFramework', '1.43.100.4-premium', :subspecs => %w[LivePull-RTS LivePush-RTS RTCSDK]
+  pod 'TTSDKFramework/ScreenCaptureExtension', '1.43.100.4-premium' if velive_screen_capture_enable?
 end
+
+target 'VeLiveQuickStartSCExtension' do
+  pod 'TTSDKFramework/ScreenCaptureExtension', '1.43.100.4-premium'
+end if velive_screen_capture_enable?
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|

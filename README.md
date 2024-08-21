@@ -7,10 +7,13 @@ The QuickStart Demo contains three types of features:​
 - Basic features, including stream pushing and pulling.​
 
 - Advanced features, including:​
-  - Adaptive bitrate​
-  - Pushing external audio and video sources​
-  - H.265 hardware encoding​
+  - Pushing with beauty
   - Pushing a Real Time Media (RTM) stream​
+  - Pulling a Real Time Media (RTM) stream​
+  - Pushing external audio and video sources​
+  - Adaptive bitrate​
+  - H.265 hardware encoding​
+  - Screen capture
   - Picture-in-Picture (PiP)​
 
 - Interactive live features, including co-hosting with audience members and host PK battle.
@@ -26,13 +29,9 @@ The QuickStart Demo contains three types of features:​
 - [Highlights](https://docs.byteplus.com/en/byteplus-media-live/docs/highlights)
 
 
-
 ## Getting started
 
 [Getting started with BytePlus MediaLive](https://docs.byteplus.com/en/byteplus-media-live/docs/getting-started)
-
-
-
 
 ## License
 The QuickStart Demo uses the [MIT license](LICENSE).

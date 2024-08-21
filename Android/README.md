@@ -9,10 +9,13 @@ The QuickStart Demo contains three types of features:​
 - Basic features, including stream pushing and pulling.​
 
 - Advanced features, including:​
-  - Adaptive bitrate​
-  - Pushing external audio and video sources​
-  - H.265 hardware encoding​
+  - Pushing with beauty
   - Pushing a Real Time Media (RTM) stream​
+  - Pulling a Real Time Media (RTM) stream​
+  - Pushing external audio and video sources​
+  - Adaptive bitrate​
+  - H.265 hardware encoding​
+  - Screen capture
   - Picture-in-Picture (PiP)​
 
 - Interactive live features, including co-hosting with audience members and host PK battle.
