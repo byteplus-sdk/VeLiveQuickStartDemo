@@ -25,6 +25,7 @@
     <string name="Home_Live_Beauty_Filter">Beauty Filter</string>
     <string name="Home_Live_Pull_Streaming">Live Pull streaming</string>
     <string name="Home_Picture_In_Picture">Picture In Picture</string>
+    <string name="Home_Live_Push_With_Mixed_Stream">Live Push With Mixed Stream</string>
     <string name="Home_Push_Streaming_Bitrate_Adaptive">Push streaming bitrate adaptive</string>
     <string name="Home_RTM_Push_Streaming">RTM ultra-low latency push streaming</string>
     <string name="Home_RTM_Pull_Streaming">RTM ultra-low latency pull streaming</string>
@@ -72,6 +73,9 @@
     <string name="Push_Beauty_Compose">Beauty</string>
     <string name="Push_Beauty_Filter">Filter</string>
     <string name="Push_Beauty_Sticker">Sticker</string>
+    <string name="Push_Mix_Stream">Mix Stream</string>
+    <string name="Push_Mix_Stream_Audio">Audio Stream</string>
+    <string name="Push_Mix_Stream_Video">Video Stream</string>
     <string name="Push_Camera_Back">Camera(Back)</string>
     <string name="Push_Camera_Front">Camera(Front)</string>
     <string name="Push_Capture_Mirror">Capture Mirror</string>
@@ -105,4 +109,5 @@
     <string name="pip_running_in_background">Running In Background</string>
     <string name="pip_not_support">Not Support Pip</string>
     <string name="config_stream_name_tip">Please config stream name</string>
+    <string name="preparing">Preparing...</string>
 </resources>

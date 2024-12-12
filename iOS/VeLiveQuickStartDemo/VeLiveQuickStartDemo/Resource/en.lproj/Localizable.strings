@@ -47,6 +47,8 @@
 
 "Home_Picture_In_Picture" = "Picture In Picture";
 
+"Home_Live_Push_With_Mixed_Stream" = "Live Push With Mixed Stream";
+
 "Home_Pull_RTM" = "RTM Pull";
 
 "Home_Push_Streaming_Bitrate_Adaptive" = "Push streaming bitrate adaptive";
@@ -144,6 +146,12 @@
 "Push_Beauty_Filter" = "Filter";
 
 "Push_Beauty_Sticker" = "Sticker";
+
+"Push_Mix_Stream" = "Mix Stream";
+
+"Push_Mix_Stream_Audio" = "Audio Stream";
+
+"Push_Mix_Stream_Video" = "Video Stream";
 
 "Push_Screen_Capture" = "Screen Capture";
 

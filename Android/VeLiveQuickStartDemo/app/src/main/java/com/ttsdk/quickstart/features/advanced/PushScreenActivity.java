@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -58,6 +59,7 @@ public class PushScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_push_screen);
         mInfoView = findViewById(R.id.push_info_text_view);
         mUrlText = findViewById(R.id.url_input_view);
@@ -67,7 +69,7 @@ public class PushScreenActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 停止前台服务
+        //  Stop front desk service
         unbindService(mKeepLiveServiceConnection);
         //  Destroy the thruster
         //  When processing business, try not to release it here. It is recommended to release it when exiting the live stream.
@@ -91,7 +93,7 @@ public class PushScreenActivity extends AppCompatActivity {
     }
 
     private void startCapture() {
-        // 请求 MediaProjection 权限
+        //  Request MediaProjection permission
         if (!checkPermission()) {
             return;
         }
@@ -172,7 +174,7 @@ public class PushScreenActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_FROM_PROJECTION_SERVICE) {
             mScreenIntent = data;
-            // 使用 MediaProjection 时，需要同时启动一个前台服务
+            //  When using MediaProjection, you need to start a foreground service at the same time
             startKeepLive();
         }
     }

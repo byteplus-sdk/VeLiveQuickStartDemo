@@ -99,21 +99,6 @@ public class VeLiveSDKHelper {
     public static void initTTSDK(final Context context) {
         sAppContext = context;
 
-        LogConfig.Builder logBuilder = new LogConfig.Builder(context);
-        //  Whether to output logs to the console
-        logBuilder.setEnableConsole(true);
-        //  Whether to write log to file
-        logBuilder.setEnableLogFile(true);
-        //  Current device unique ID
-        logBuilder.setDeviceID(Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
-        //  Maximum file size in MB
-        logBuilder.setMaxLogSizeM(10);
-        //  Single file size in MB
-        logBuilder.setSingleLogSizeM(1);
-        //  File expiration time, in seconds
-        logBuilder.setLogExpireTimeS(24 * 60 * 60);
-        //  log output level
-        logBuilder.setLogLevel(LogConfig.LogLevel.Debug);
 
         Config.Builder configBuilder = new Config.Builder();
         //  Configure App Context
@@ -127,8 +112,6 @@ public class VeLiveSDKHelper {
 
         //  version number
         configBuilder.setAppVersion(getVersionName(context));
-        //  Configuration log
-        configBuilder.setLogConfig(logBuilder.build());
         //  Configure TTSDK AppID
         configBuilder.setAppID(TTSDK_APP_ID);
         //  Configure the License Path

@@ -38,28 +38,6 @@
     [VeLiveCommon setAppLogCustomData:@{
         @"CustomKey" : @"CustomValue"
     }];
-    //  log configuration
-    TTSDKLogConfiguration *logConfig = [[TTSDKLogConfiguration alloc] init];
-    //  Whether to output logs to the console
-    logConfig.enableConsole = YES;
-    //  Whether to write log to file
-    logConfig.enableLogFile = YES;
-    //  Current device unique ID
-    logConfig.deviceID = UIDevice.currentDevice.identifierForVendor.UUIDString;
-    //  Maximum file size in MB
-    logConfig.maxLogSizeM = 10;
-    //  Single file size in MB
-    logConfig.singleLogSizeM = 1;
-    //  File expiration time, in seconds
-    logConfig.logExpireTimeS = 24 * 60 * 60;
-    //  log output level
-#if DEBUG
-    logConfig.logLevel = TTSDKLogLevelDebug;
-#else
-    logConfig.logLevel = TTSDKLogLevelInfo;
-#endif
-    //  Configuration log
-    cfg.logConfiguration = logConfig;
     //  Start TTSDK
     [TTSDKManager startWithConfiguration:cfg];
 }
