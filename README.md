@@ -8,7 +8,6 @@ The QuickStart Demo contains three types of features:​
 
 - Advanced features, including:​
   - Pushing with beauty
-  - Pushing a Real Time Media (RTM) stream​
   - Pulling a Real Time Media (RTM) stream​
   - Pushing external audio and video sources​
   - Adaptive bitrate​
