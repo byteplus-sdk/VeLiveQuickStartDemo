@@ -110,4 +110,7 @@
     <string name="pip_not_support">Not Support Pip</string>
     <string name="config_stream_name_tip">Please config stream name</string>
     <string name="preparing">Preparing...</string>
+    <string name="Screen_Capture_Interrupted_Error">Screen Capture Interrupted Error</string>
+    <string name="Screen_Capture_Not_Support_Error">Screen Capture Not Support Error</string>
+    <string name="Screen_Capture_Start_Error">Screen Capture Start Error</string>
 </resources>

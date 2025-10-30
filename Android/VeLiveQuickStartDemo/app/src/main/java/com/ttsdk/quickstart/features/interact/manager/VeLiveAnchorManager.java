@@ -310,7 +310,7 @@ public class VeLiveAnchorManager {
         //  Push stream configuration
         VeLivePusherConfiguration config = new VeLivePusherConfiguration();
         //  Configure context
-        config.setContext(Env.getApplicationContext());
+        config.setContext(Env.getConfig().getApplicationContext());
         //  Number of failed reconnections
         config.setReconnectCount(10);
         //  Create a pusher
@@ -455,7 +455,7 @@ public class VeLiveAnchorManager {
     };
 
     private void initRtcEngine() {
-        mRTCVideo = RTCVideo.createRTCVideo(Env.getApplicationContext(), mAppId, mRTCVideoEventHandler, null, null);
+        mRTCVideo = RTCVideo.createRTCVideo(Env.getConfig().getApplicationContext(), mAppId, mRTCVideoEventHandler, null, null);
         mRTCVideo.setLocalVideoMirrorType(MirrorType.MIRROR_TYPE_RENDER_AND_ENCODER);
     }
 
