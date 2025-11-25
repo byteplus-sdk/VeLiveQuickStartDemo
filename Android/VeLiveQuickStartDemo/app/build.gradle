@@ -69,9 +69,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // Add TTSDK online integration address, it is recommended to use the latest stable version, please refer to the [SDK Download] chapter for how to obtain it
-     implementation 'com.bytedanceapi:ttsdk-ttlivepush_rtc:1.48.100.103'
-     implementation 'com.bytedanceapi:ttsdk-ttlivepull_rtc:1.48.100.103'
-     implementation "com.byteplus:BytePlusRTC:3.58.1.45200"
+     implementation 'com.bytedanceapi:ttsdk-ttlivepush:1.48.200.2'
+     implementation 'com.bytedanceapi:ttsdk-ttlivepull_premium:1.48.200.2'
+     implementation "com.byteplus:BytePlusRTC:3.58.1.53300"
 
 
 }
