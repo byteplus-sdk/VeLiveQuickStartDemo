@@ -34,3 +34,7 @@ The QuickStart Demo contains three types of features:​
 
 ## License
 The QuickStart Demo uses the [MIT license](LICENSE).
+
+## Security and privacy
+This project takes security seriously. 
+For vulnerability reporting and supported versions, see [SECURITY.md](SECURITY.md)
