@@ -48,7 +48,7 @@ Live streaming
 
 - (void)setupLivePlayer {
     //  Create a live stream player
-    self.livePlayer = [[TVLManager alloc] initWithOwnPlayer:YES];
+    self.livePlayer = [[TVLManager alloc] init];
     
     //  Set player callback
     [self.livePlayer setObserver:self];

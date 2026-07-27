@@ -302,7 +302,7 @@
 - (void)setupPlayerIfNeed {
     if (self.livePlayer == nil) {
         //  Create player
-        TVLManager *livePlayer =  [[TVLManager alloc] initWithOwnPlayer:YES];
+        TVLManager *livePlayer =  [[TVLManager alloc] init];
         self.livePlayer = livePlayer;
         //  Set player callback
         [self.livePlayer setObserver:self];

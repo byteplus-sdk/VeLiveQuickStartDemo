@@ -24,7 +24,6 @@
     <string name="Home_Interactive_Features">Interactive Features</string>
     <string name="Home_Live_Beauty_Filter">Beauty Filter</string>
     <string name="Home_Live_Pull_Streaming">Live Pull streaming</string>
-    <string name="Home_Picture_In_Picture">Picture In Picture</string>
     <string name="Home_Live_Push_With_Mixed_Stream">Live Push With Mixed Stream</string>
     <string name="Home_Push_Streaming_Bitrate_Adaptive">Push streaming bitrate adaptive</string>
     <string name="Home_RTM_Push_Streaming">RTM ultra-low latency push streaming</string>
@@ -91,8 +90,6 @@
     <string name="Push_Url_Tip">Stream Name</string>
     <string name="Generate_Push_Url_Tip">generate push url…</string>
     <string name="Generate_Pull_Url_Tip">generate pull url…</string>
-    <string name="Start_Picture_In_Picture">Open picture-in-picture</string>
-    <string name="Stop_Picture_In_Picture">Stop picture-in-picture</string>
     <string name="app_name">veLive Quick Start</string>
     <string name="other_room_id">Other Room ID</string>
     <string name="other_token">Other Token</string>
@@ -107,10 +104,11 @@
     <string name="pip_authorization_success">Authorization Success</string>
     <string name="pip_require_authorization">Currently no permission, please authorize</string>
     <string name="pip_running_in_background">Running In Background</string>
-    <string name="pip_not_support">Not Support Pip</string>
     <string name="config_stream_name_tip">Please config stream name</string>
     <string name="preparing">Preparing...</string>
     <string name="Screen_Capture_Interrupted_Error">Screen Capture Interrupted Error</string>
     <string name="Screen_Capture_Not_Support_Error">Screen Capture Not Support Error</string>
     <string name="Screen_Capture_Start_Error">Screen Capture Start Error</string>
+    <string name="Open_Small_Window">Open Small Window</string>
+    <string name="Close_Small_Window">Close Small Window</string>
 </resources>
