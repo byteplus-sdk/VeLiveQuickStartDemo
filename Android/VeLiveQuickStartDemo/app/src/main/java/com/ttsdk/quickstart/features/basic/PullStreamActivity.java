@@ -69,8 +69,6 @@ public class PullStreamActivity extends AppCompatActivity {
     private EditText mUrlText;
 
     private SurfaceView mSurfaceView;
-    private VeLivePictureInPicturePlayerManager mPipManager;
-    private boolean isBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +78,9 @@ public class PullStreamActivity extends AppCompatActivity {
         mInfoView = findViewById(R.id.pull_info_text_view);
         mUrlText = findViewById(R.id.url_input_view);
         mSurfaceView = findViewById(R.id.render_view);
-        isBackPressed = false;
 
         mUrlText.setText("https://pull.ysymh.cn/liuke-live/liuke-test.flv");
         setupLivePlayer();
-
-        setupPictureInPicture();
     }
 
     @Override
@@ -94,30 +89,21 @@ public class PullStreamActivity extends AppCompatActivity {
         //  Destroy the live stream player
         //  When processing business, try not to release it here. It is recommended to release it when exiting the live stream.
         mLivePlayer.destroy();
-        mPipManager.destroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (mPipManager != null && !isBackPressed) {
-            mPipManager.startPictureInPicture();
-        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isBackPressed = true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mPipManager != null) {
-            mPipManager.stopPictureInPicture();
-        }
     }
 
     private void setupLivePlayer() {
@@ -147,53 +133,6 @@ public class PullStreamActivity extends AppCompatActivity {
 
     }
 
-    private void setupPictureInPicture() {
-        mPipManager = new VeLivePictureInPicturePlayerManager(mLivePlayer, this);
-        mPipManager.setObserver(new VeLivePictureInPicturePlayerManager.VeLivePictureInPicturePlayerManagerObserver() {
-            @Override
-            public void onClickResumeAction() {
-                // Resume from PiP
-                try {
-                    Class<?> cls = Class.forName(PullStreamActivity.class.getName());
-                    Intent intent = new Intent(getBaseContext(), cls);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (ClassNotFoundException e) {
-
-                }
-            }
-        });
-        boolean isPermission = mPipManager.isPermissionGranted();
-        if (!isPermission) {
-            mPipManager.requestPermission(new VePictureInPictureManager.VePictureInPicturePermissionCallback() {
-                @Override
-                public void onGranted(boolean granted) {
-                    //on permission granted
-                }
-
-                @Override
-                public void onRequestPermission(Context context, VePictureInPictureManager.VePictureInPicturePermissionResult result) {
-                    // on request permission
-                    new AlertDialog.Builder(context)
-                            .setMessage("尚未开启系统悬浮窗，请去设置中开启 [显示悬浮窗] 权限")
-                            .setPositiveButton("去开启", (dialog, which) -> {
-                                // 用户同意开启
-                                result.accept();
-                            })
-                            .setNegativeButton("取消", (dialog, which) -> {
-                                // 用户未同意
-                                result.cancel();
-                            })
-                            .setCancelable(false)
-                            .show();
-                }
-            });
-        }
-
-        mPipManager.setSurfaceHolder(mSurfaceView.getHolder());
-    }
-
-
     public void playControl(View view) {
         ToggleButton toggleButton = (ToggleButton) view;
         if (mUrlText.getText().toString().isEmpty()) {
@@ -203,30 +142,26 @@ public class PullStreamActivity extends AppCompatActivity {
         }
         if (toggleButton.isChecked()) {
             view.setEnabled(false);
-            view.setEnabled(true);
-            mLivePlayer.setPlayUrl(mUrlText.getText().toString());
-            mLivePlayer.play();
-
             mInfoView.setText(R.string.Generate_Pull_Url_Tip);
-//            VeLiveURLGenerator.genPullUrl(VeLiveSDKHelper.LIVE_APP_NAME, mUrlText.getText().toString(), new VeLiveURLGenerator.VeLiveURLCallback<VeLivePullURLModel>() {
-//                @Override
-//                public void onSuccess(VeLiveURLRootModel<VeLivePullURLModel> model) {
-//                    view.setEnabled(true);
-//                    mInfoView.setText("");
-//                    //  Set broadcast address, support rtmp, http, https protocol, flv, m3u8 format address
-//                    mLivePlayer.setPlayUrl(model.result.getUrl("flv"));
-//
-//                    //  Start playing
-//                    mLivePlayer.play();
-//                }
-//
-//                @Override
-//                public void onFailed(VeLiveURLError error) {
-//                    view.setEnabled(true);
-//                    mInfoView.setText(error.message);
-//                    toggleButton.setChecked(false);
-//                }
-//            });
+            VeLiveURLGenerator.genPullUrl(VeLiveSDKHelper.LIVE_APP_NAME, mUrlText.getText().toString(), new VeLiveURLGenerator.VeLiveURLCallback<VeLivePullURLModel>() {
+                @Override
+                public void onSuccess(VeLiveURLRootModel<VeLivePullURLModel> model) {
+                    view.setEnabled(true);
+                    mInfoView.setText("");
+                    //  Set broadcast address, support rtmp, http, https protocol, flv, m3u8 format address
+                    mLivePlayer.setPlayUrl(model.result.getUrl("flv"));
+
+                    //  Start playing
+                    mLivePlayer.play();
+                }
+
+                @Override
+                public void onFailed(VeLiveURLError error) {
+                    view.setEnabled(true);
+                    mInfoView.setText(error.message);
+                    toggleButton.setChecked(false);
+                }
+            });
         } else {
             //  Stop playing
             mLivePlayer.stop();
@@ -294,9 +229,6 @@ public class PullStreamActivity extends AppCompatActivity {
 
         @Override
         public void onVideoSizeChanged(VeLivePlayer veLivePlayer, int width, int height) {
-            if (mPipManager != null) {
-                mPipManager.setVideoSize(width, height);
-            }
         }
 
         @Override

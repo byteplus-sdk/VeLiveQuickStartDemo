@@ -6,50 +6,52 @@
  */
 package com.ttsdk.quickstart.features.advanced;
 
-
 import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFillMode.VeLivePlayerFillModeAspectFill;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFillMode.VeLivePlayerFillModeAspectFit;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFillMode.VeLivePlayerFillModeFullFill;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFormat.VeLivePlayerFormatFLV;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFormat.VeLivePlayerFormatRTM;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerProtocol.VeLivePlayerProtocolTCP;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerProtocol.VeLivePlayerProtocolTLS;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerResolution;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerResolution.VeLivePlayerResolutionOrigin;
-import static com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerStreamType.VeLivePlayerStreamTypeMain;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bytedance.vepicutureinpicture.VeLivePictureInPicturePlayerManager;
 import com.bytedance.vepicutureinpicture.VePictureInPictureManager;
 import com.ss.videoarch.liveplayer.VeLivePayerAudioLoudnessInfo;
 import com.ss.videoarch.liveplayer.VeLivePlayerAudioVolume;
-import com.ss.videoarch.liveplayer.VeLivePlayerStreamData;
-import com.ttsdk.quickstart.R;
-import com.ttsdk.quickstart.helper.VeLiveSDKHelper;
 import com.ss.videoarch.liveplayer.VeLivePlayer;
 import com.ss.videoarch.liveplayer.VeLivePlayerAudioFrame;
 import com.ss.videoarch.liveplayer.VeLivePlayerConfiguration;
 import com.ss.videoarch.liveplayer.VeLivePlayerDef;
-import com.ss.videoarch.liveplayer.VeLivePlayerDef.VeLivePlayerFillMode;
 import com.ss.videoarch.liveplayer.VeLivePlayerError;
 import com.ss.videoarch.liveplayer.VeLivePlayerObserver;
 import com.ss.videoarch.liveplayer.VeLivePlayerStatistics;
 import com.ss.videoarch.liveplayer.VeLivePlayerVideoFrame;
 import com.ss.videoarch.liveplayer.VideoLiveManager;
+import com.ttsdk.quickstart.R;
+import com.ttsdk.quickstart.features.advanced.pip.FloatingVideoService;
+import com.ttsdk.quickstart.features.basic.PullStreamActivity;
+import com.ttsdk.quickstart.helper.VeLiveSDKHelper;
 import com.ttsdk.quickstart.helper.sign.VeLiveURLGenerator;
 import com.ttsdk.quickstart.helper.sign.model.VeLivePullURLModel;
 import com.ttsdk.quickstart.helper.sign.model.VeLiveURLError;
@@ -58,39 +60,80 @@ import com.ttsdk.quickstart.helper.sign.model.VeLiveURLRootModel;
 import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
-/*
-Live streaming
- This file shows how to integrate live rtm streaming function
- 1, initialize the pusher API: mLivePlayer = new VideoLiveManager (this);
- 2, configure the pusher API: mLivePlayer.setConfig (new VeLivePlayerConfiguration ());
- 3, configure the rendering view API: mLivePlayer.setSurfaceHolder (mSurfaceView.getHolder ());
- 4, configure the broadcast address API: mLivePlayer..setPlayStreamData(streamData);
- 5, start playing API: mLivePlayer.play ();
- */
-
-public class PullRTMActivity extends AppCompatActivity {
-
-    private final String TAG = "PullRTMActivity";
-
+public class PictureInPictureActivity extends AppCompatActivity {
+    private final String TAG = "PictureInPicture";
     private VeLivePlayer mLivePlayer;
     private TextView mInfoView;
 
     private EditText mUrlText;
 
     private SurfaceView mSurfaceView;
+    private FrameLayout mViewContainer;
+    private VeLivePictureInPicturePlayerManager mPipManager;
+    private boolean isBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_pull_stream);
+        setContentView(R.layout.activity_picture_in_picture);
+
         mInfoView = findViewById(R.id.pull_info_text_view);
         mUrlText = findViewById(R.id.url_input_view);
-        mSurfaceView = findViewById(R.id.render_view);
+        mSurfaceView = new SurfaceView(this);
+        mSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+        mViewContainer = findViewById(R.id.surface_container);
+        mViewContainer.addView(mSurfaceView);
         setupLivePlayer();
+
+        setupPictureInPicture();
+    }
+
+    private void setupPictureInPicture() {
+        mPipManager = new VeLivePictureInPicturePlayerManager(mLivePlayer, this);
+        mPipManager.setObserver(new VeLivePictureInPicturePlayerManager.VeLivePictureInPicturePlayerManagerObserver() {
+            @Override
+            public void onClickResumeAction() {
+                // Resume from PiP
+                try {
+                    Class<?> cls = Class.forName(PictureInPictureActivity.class.getName());
+                    Intent intent = new Intent(getBaseContext(), cls);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (ClassNotFoundException e) {
+
+                }
+            }
+        });
+        boolean isPermission = mPipManager.isPermissionGranted();
+        if (!isPermission) {
+            mPipManager.requestPermission(new VePictureInPictureManager.VePictureInPicturePermissionCallback() {
+                @Override
+                public void onGranted(boolean granted) {
+                    //on permission granted
+                }
+
+                @Override
+                public void onRequestPermission(Context context, VePictureInPictureManager.VePictureInPicturePermissionResult result) {
+                    // on request permission
+                    new AlertDialog.Builder(context)
+                            .setMessage("尚未开启系统悬浮窗，请去设置中开启 [显示悬浮窗] 权限")
+                            .setPositiveButton("去开启", (dialog, which) -> {
+                                // 用户同意开启
+                                result.accept();
+                            })
+                            .setNegativeButton("取消", (dialog, which) -> {
+                                // 用户未同意
+                                result.cancel();
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            });
+        }
+
+        mPipManager.setSurfaceHolder(mSurfaceView.getHolder());
     }
 
     @Override
@@ -99,21 +142,9 @@ public class PullRTMActivity extends AppCompatActivity {
         //  Destroy the live stream player
         //  When processing business, try not to release it here. It is recommended to release it when exiting the live stream.
         mLivePlayer.destroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        if (mPipManager != null) {
+            mPipManager.destroy();
+        }
     }
 
     private void setupLivePlayer() {
@@ -142,6 +173,7 @@ public class PullRTMActivity extends AppCompatActivity {
         mLivePlayer.setRenderFillMode(VeLivePlayerFillModeAspectFill);
     }
 
+
     public void playControl(View view) {
         ToggleButton toggleButton = (ToggleButton) view;
         if (mUrlText.getText().toString().isEmpty()) {
@@ -158,35 +190,8 @@ public class PullRTMActivity extends AppCompatActivity {
                     view.setEnabled(true);
                     mInfoView.setText("");
 
-                    //  To configure the RTM low-latency address, refer to the following code
-                    // Configure RTM primary address
-                    VeLivePlayerStreamData.VeLivePlayerStream playStreamRTM = new VeLivePlayerStreamData.VeLivePlayerStream();
-                    playStreamRTM.url = model.result.getUrl("udp");
-                    playStreamRTM.format = VeLivePlayerFormatRTM;
-                    playStreamRTM.resolution = new VeLivePlayerResolution(VeLivePlayerResolutionOrigin);;
-                    playStreamRTM.streamType = VeLivePlayerStreamTypeMain;
-
-                    // Configure Flv downgrade address
-                    VeLivePlayerStreamData.VeLivePlayerStream playStreamFLV = new VeLivePlayerStreamData.VeLivePlayerStream();
-                    playStreamFLV.url =  model.result.getUrl("flv");
-                    playStreamFLV.format = VeLivePlayerFormatFLV;
-                    playStreamFLV.resolution = new VeLivePlayerResolution(VeLivePlayerResolutionOrigin);
-                    playStreamFLV.streamType = VeLivePlayerStreamTypeMain;
-
-                    // create stream data
-                    VeLivePlayerStreamData streamData = new VeLivePlayerStreamData();
-                    List<VeLivePlayerStreamData.VeLivePlayerStream> streamList = new ArrayList<>();
-                    // add RTM master address
-                    streamList.add(playStreamRTM);
-                    // add FLV downgrade address
-                    streamList.add(playStreamFLV);
-
-                    streamData.mainStreamList = streamList;
-                    streamData.defaultFormat = VeLivePlayerFormatRTM;
-                    // https://xxx -> VeLivePlayerProtocolTLS
-                    // http://xxx -> VeLivePlayerProtocolTCP
-                    streamData.defaultProtocol = VeLivePlayerProtocolTLS;
-                    mLivePlayer.setPlayStreamData(streamData);
+                    //  Set broadcast address, support rtmp, http, https protocol, flv, m3u8 format address
+                    mLivePlayer.setPlayUrl(model.result.getUrl("flv"));
 
                     //  Start playing
                     mLivePlayer.play();
@@ -205,25 +210,33 @@ public class PullRTMActivity extends AppCompatActivity {
         }
     }
 
-    public void fillModeControl(View view) {
-        showFillModeDialog();
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mPipManager != null && !isBackPressed) {
+            mPipManager.startPictureInPicture();
+        }
     }
 
-    private void changeFillMode(VeLivePlayerFillMode fillMode) {
-        //  Set fill mode
-        mLivePlayer.setRenderFillMode(fillMode);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBackPressed = true;
     }
 
-    public void muteControl(View view) {
-        //  Mute/Unmute
-        ToggleButton toggleButton = (ToggleButton) view;
-        mLivePlayer.setMute(toggleButton.isChecked());
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mPipManager != null) {
+            mPipManager.stopPictureInPicture();
+        }
     }
 
     private final VeLivePlayerObserver mplayerObserver = new VeLivePlayerObserver() {
         @Override
         public void onError(VeLivePlayer veLivePlayer, VeLivePlayerError veLivePlayerError) {
-            Log.e(TAG, "Player Error" + veLivePlayerError.mErrorMsg);
+            Log.e("VeLiveQuickStartDemo", "Player Error" + veLivePlayerError.mErrorMsg);
         }
         @Override
         public void onStatistics(VeLivePlayer veLivePlayer, VeLivePlayerStatistics veLivePlayerStatistics) {
@@ -266,7 +279,9 @@ public class PullRTMActivity extends AppCompatActivity {
 
         @Override
         public void onVideoSizeChanged(VeLivePlayer veLivePlayer, int width, int height) {
-
+            if (mPipManager != null) {
+                mPipManager.setVideoSize(width, height);
+            }
         }
 
         @Override
@@ -375,34 +390,14 @@ public class PullRTMActivity extends AppCompatActivity {
         }
 
         @Override
-        public SwitchPermissionRequestResult shouldAutomaticallySwitch(VeLivePlayer veLivePlayer, VeLivePlayerResolution veLivePlayerResolution, VeLivePlayerResolution veLivePlayerResolution1, JSONObject jsonObject) {
+        public SwitchPermissionRequestResult shouldAutomaticallySwitch(VeLivePlayer veLivePlayer, VeLivePlayerDef.VeLivePlayerResolution veLivePlayerResolution, VeLivePlayerDef.VeLivePlayerResolution veLivePlayerResolution1, JSONObject jsonObject) {
             return SwitchPermissionRequestResult.APPROVED;
         }
 
         @Override
-        public void didAutomaticallySwitch(VeLivePlayer veLivePlayer, VeLivePlayerResolution veLivePlayerResolution, VeLivePlayerResolution veLivePlayerResolution1, JSONObject jsonObject) {
+        public void didAutomaticallySwitch(VeLivePlayer veLivePlayer, VeLivePlayerDef.VeLivePlayerResolution veLivePlayerResolution, VeLivePlayerDef.VeLivePlayerResolution veLivePlayerResolution1, JSONObject jsonObject) {
 
         }
-
     };
-
-    private void showFillModeDialog() {
-        final String[] items = {
-                getString(R.string.Pull_Stream_Fill_Mode_Alert_AspectFill),
-                getString(R.string.Pull_Stream_Fill_Mode_Alert_AspectFit),
-                getString(R.string.Pull_Stream_Fill_Mode_Alert_FullFill)};
-        AlertDialog.Builder singleChoiceDialog = new AlertDialog.Builder(this);
-        singleChoiceDialog.setTitle(getString(R.string.Pull_Stream_Fill_Mode_Alert_Title));
-        singleChoiceDialog.setItems(items, ((dialog, which) -> {
-            if (which == 0) {
-                changeFillMode(VeLivePlayerFillModeAspectFill);
-            } else if (which == 1) {
-                changeFillMode(VeLivePlayerFillModeAspectFit);
-            } else if (which == 2) {
-                changeFillMode(VeLivePlayerFillModeFullFill);
-            }
-        }));
-        singleChoiceDialog.show();
-    }
 
 }
